@@ -1,0 +1,9 @@
+﻿@model List<Service>
+
+
+@foreach (var Service in Model)
+{
+    <li><a asp-controller="User" asp-action="Service" asp-route-id="@Service.ServiceId">@Service.Name</a></li>
+}
+
+
