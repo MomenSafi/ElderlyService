@@ -1,0 +1,154 @@
+﻿@model List<Caregiver>
+@{
+    ViewData["Title"] = "About Us";
+}
+<head>
+    <style>
+        .editimg {
+            position: relative;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: right center;
+            height: 40vh;
+            min-height: 40vh;
+            display: flex;
+            align-items: center
+        }
+
+            .editimg:before {
+                background-image: linear-gradient(to left, rgba(77,39,63,0) 0%, #463b46 100%) !important;
+            }
+
+        .auto-container {
+            position: relative;
+            max-width: 1210px;
+            padding: 0px 20px;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: relative !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            line-height: 1.2em !important;
+            margin-bottom: 10px !important;
+            font-size: 62px !important;
+            text-transform: capitalize !important;
+            text-align: center;
+        }
+    </style>
+</head>
+<div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
+    <div class="auto-container">
+        <h1 class="heading mb-3 header">About Us</h1>
+    </div>
+</div>
+
+
+@* About US *@
+<div class="site-section">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-7">
+                <div class="section-heading">
+                    <h2 class="heading mb-3">Health Care Elderly is for Your Family</h2>
+                    <p class="mb-5">Our healthcare project for the elderly is a compassionate initiative designed to cater to the unique needs of our senior community. Focused on providing comprehensive and personalized services.</p>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <img src="~/images/img_3.jpg" alt="Image" class="img-fluid">
+                        </div>
+                        <div class="col-lg-6">
+                            <ul class="list-unstyled ul-check primary">
+                                <li>Tailored for individual needs.</li>
+                                <li>Fostering social well-being.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+
+                <div class="d-block custom-media algin-items-stretch">
+                    <div class="img-bg" style="background-image: url('@Url.Content("~/images/img_2.jpg")')"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@{
+    var ProfessionalCaregiver = ViewBag.ProfessionalCaregiver;
+    var ServiceWeGive = ViewBag.ServiceWeGive;
+    var UserUseWebsite = ViewBag.UserUseWebsite;
+    var HappyPeople = ViewBag.HappyPeople;
+}
+@* statistics *@
+<div class="site-section bg-primary count-numbers">
+    <div class="container">
+        <div class="row">
+            <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                <div class="counter-wrap text-center">
+                    <strong class="counter d-block"><span class="number" data-number="@ProfessionalCaregiver"></span></strong>
+                    <span>Professional Caregiver</span>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                <div class="counter-wrap text-center">
+                    <strong class="counter d-block"><span class="number" data-number="@ServiceWeGive"></span></strong>
+                    <span>Service We Give</span>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                <div class="counter-wrap text-center">
+                    <strong class="counter d-block"><span class="number" data-number="@UserUseWebsite"></span></strong>
+                    <span>User Use Website</span>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                <div class="counter-wrap text-center">
+                    <strong class="counter d-block"><span class="number" data-number="@HappyPeople"></span></strong>
+                    <span>Happy People</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* Top Caregiver *@
+@{
+    int count = 0;
+}
+<div class="site-section">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-7 text-center mx-auto">
+                <h2 class="heading mb-3 text-black">Our Awesome Team</h2>
+                <p>"Discover the diverse expertise within our exceptional team, blending talents in health care for elderly. Together, we are dedicated to providing comprehensive and compassionate care for your well-being."</p>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var topCaregiver in Model)
+            {
+                <div class="col-lg-3">
+                    <div class="team text-center">
+                        <a asp-action="Profile" asp-route-id="@topCaregiver.CaregiverId" class="d-block"><img src="@topCaregiver.Users.ImageUrl" alt="" class="img-fluid"></a>
+                        <h3>@topCaregiver.Users.FirstName @topCaregiver.Users.LastName</h3>
+                        <span class="position d-block">@topCaregiver.Service.Name</span>
+                        <p>@topCaregiver.AboutYou</p>
+                    </div>
+                </div>
+                count++;
+                if (count == 3)
+                {
+                    break;
+                }
+            }
+        </div>
+    </div>
+</div>
+
+
+

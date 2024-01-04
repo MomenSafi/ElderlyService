@@ -21,6 +21,7 @@ namespace ElderlyService.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<ReviewsForWebsites> reviewsForWebsites { get; set; }
         public DbSet<CardData> Cards { get; set; }
+        public DbSet<AvilableForThisWeek> AvilableForThisWeek { get; set; }
 
         public List<Service> GetService()
         {
@@ -87,6 +88,12 @@ namespace ElderlyService.Data
 
             modelBuilder.Entity<Caregiver>()
                 .HasMany(u => u.Availabilities)
+                .WithOne(r => r.Caregiver)
+                .HasForeignKey(r => r.CaregiverId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Caregiver>()
+                .HasMany(u => u.AvilableForThisWeek)
                 .WithOne(r => r.Caregiver)
                 .HasForeignKey(r => r.CaregiverId)
                 .OnDelete(DeleteBehavior.Restrict);

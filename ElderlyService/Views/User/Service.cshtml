@@ -1,0 +1,91 @@
+﻿@model List<Service>
+@{
+    ViewData["Title"] = "Service";
+}
+<head>
+    <style>
+        .editimg {
+            position: relative;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: right center;
+            height: 40vh;
+            min-height: 40vh;
+            display: flex;
+            align-items: center
+        }
+
+            .editimg:before {
+                background-image: linear-gradient(to left, rgba(77,39,63,0) 0%, #463b46 100%) !important;
+            }
+
+        .auto-container {
+            position: relative;
+            max-width: 1210px;
+            padding: 0px 20px;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: relative !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            line-height: 1.2em !important;
+            margin-bottom: 10px !important;
+            font-size: 62px !important;
+            text-transform: capitalize !important;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
+    <div class="auto-container">
+        <h1 class="heading mb-3 header">Our Services</h1>
+    </div>
+</div>
+
+
+@* Services *@
+<div class="site-section">
+    <div class="container">
+        <div class="row">
+            @foreach (var service in Model)
+            {
+                <div class="col-6 col-sm-6 col-md-6 mb-4 mb-lg-0 col-lg-3">
+                    <div class="service">
+                        <a asp-action="Caregiver" asp-route-id="@service.ServiceId" class="d-block"><img src="@service.ImageUrl" alt="Image" class="img-fluid"></a>
+                        <div class="service-inner">
+                            <h3>@service.Name</h3>
+                            <p>@service.Description</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="site-section bg-primary">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-lg-6 mb-5 mb-md-0">
+                <img src="~/images/about.png" alt="Image" class="img-fluid">
+            </div>
+            <div class="col-md-6 col-lg-5 ml-auto">
+                <div class="section-heading">
+                    <h2 class="heading mb-3 text-white">Elder Home Care</h2>
+
+                    <p class="text-white">Our mission offering comprehensive healthcare solutions tailored to elderly specific requirements. we prioritize the overall health and happiness of our elderly clients.</p>
+                    <p class="mb-4 text-white">At elderly, we are committed to redefining elderly healthcare, and ensuring that every senior receives the attention and care they deserve.</p>
+                    <p class="text-white mb-5"><strong class="h3">&ldquo;We care for elderly people&rdquo;</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

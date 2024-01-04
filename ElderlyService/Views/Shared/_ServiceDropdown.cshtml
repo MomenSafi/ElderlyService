@@ -3,7 +3,5 @@
 
 @foreach (var Service in Model)
 {
-    <li><a asp-controller="User" asp-action="Service" asp-route-id="@Service.ServiceId">@Service.Name</a></li>
+    <li><a class="nav-link" asp-controller="User" asp-action="Caregiver" asp-route-id="@Service.ServiceId">@Service.Name</a></li>
 }
-
-

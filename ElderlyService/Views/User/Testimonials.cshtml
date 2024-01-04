@@ -1,0 +1,146 @@
+﻿@using Newtonsoft.Json
+@model List<ReviewsForWebsites>
+@{
+    ViewData["Title"] = "Testimonials";
+}
+<!-- MAIN -->
+<head>
+    <style>
+        .editimg {
+            position: relative;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: right center;
+            height: 40vh;
+            min-height: 40vh;
+            display: flex;
+            align-items: center
+        }
+
+            .editimg:before {
+                background-image: linear-gradient(to left, rgba(77,39,63,0) 0%, #463b46 100%) !important;
+            }
+
+        .auto-container {
+            position: relative;
+            max-width: 1210px;
+            padding: 0px 20px;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: relative !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            line-height: 1.2em !important;
+            margin-bottom: 10px !important;
+            font-size: 62px !important;
+            text-transform: capitalize !important;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
+    <div class="auto-container">
+        <h1 class="heading mb-3 header">Testimonials</h1>
+    </div>
+</div>
+
+
+
+<div class="site-section bg-light">
+    <div class="container">
+        <div class="row">
+            @foreach (var testimonials in Model.OrderBy(t => t.DateTime))
+            {
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
+                    <div class="testimonial text-center">
+                        <img src="@testimonials.Users.ImageUrl" alt="Image" class="img-fluid">
+                        <blockquote>
+                            <p class="quote">@testimonials.Comment</p>
+                            <cite class="author">@testimonials.Users.FirstName @testimonials.Users.LastName</cite>
+                        </blockquote>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+@*
+    add feedback
+*@
+@{
+    string liveUser = Context.Session.GetString("LiveUser");
+}
+@if (!string.IsNullOrEmpty(liveUser))
+{
+    var user = JsonConvert.DeserializeObject<Users>(liveUser);
+    if (user.Roles.TypeOfUser == "User")
+    {
+        <div class="site-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mb-5">
+                        <form asp-action="AddTestimonials">
+
+                            <div class="row form-group">
+                                <div class="col-md-12">
+                                    <label class="text-black" for="message">Message</label>
+                                    <textarea name="comment" id="message" cols="30" rows="7" class="form-control" placeholder="Write your Testimonial..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-md-12">
+                                    <input type="submit" value="Send Message" class="btn btn-primary text-white">
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+                    <div class="col-lg-3 ml-auto">
+                        <div class="mb-3">
+                            <p class="mb-0 font-weight-bold text-black">Address</p>
+                            <p class="mb-4">203 Fake St. Mountain View, Amman, Jordan</p>
+
+                            <p class="mb-0 font-weight-bold text-black">Phone</p>
+                            <p class="mb-4"><a>0796959979</a></p>
+
+                            <p class="mb-0 font-weight-bold text-black">Email Address</p>
+                            <p class="mb-0"><a href="mailto:Safi.moumen90@gmail.com" target="_blank">Safi.moumen90@gmail.com</a></p>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+
+
+<div class="site-section bg-primary">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-lg-6 mb-5 mb-md-0">
+                <img src="~/images/about.png" alt="Image" class="img-fluid">
+            </div>
+            <div class="col-md-6 col-lg-5 ml-auto">
+                <div class="section-heading">
+                    <h2 class="heading mb-3 text-white">Elder Home Care</h2>
+
+                    <p class="text-white">Our mission offering comprehensive healthcare solutions tailored to elderly specific requirements. we prioritize the overall health and happiness of our elderly clients.</p>
+                    <p class="mb-4 text-white">At elderly, we are committed to redefining elderly healthcare, and ensuring that every senior receives the attention and care they deserve.</p>
+                    <p class="text-white mb-5"><strong class="h3">&ldquo;We care for elderly people&rdquo;</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

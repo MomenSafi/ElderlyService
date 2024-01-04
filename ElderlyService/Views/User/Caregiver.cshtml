@@ -1,0 +1,123 @@
+﻿@model List<Caregiver>
+
+@{
+    ViewData["Title"] = "Caregivers";
+}
+
+<!-- MAIN -->
+<head>
+    <link href="~/card.css" rel="stylesheet" />
+    <style>
+        .editimg {
+            position: relative;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: right center;
+            height: 40vh;
+            min-height: 40vh;
+            display: flex;
+            align-items: center
+        }
+
+            .editimg:before {
+                background-image: linear-gradient(to left, rgba(77,39,63,0) 0%, #463b46 100%) !important;
+            }
+
+        .auto-container {
+            position: relative;
+            max-width: 1210px;
+            padding: 0px 20px;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: relative !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            line-height: 1.2em !important;
+            margin-bottom: 10px !important;
+            font-size: 62px !important;
+            text-transform: capitalize !important;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
+    <div class="auto-container">
+        <h1 class="heading mb-3 header">Single Blog Post</h1>
+    </div>
+</div>
+
+<div class="site-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 blog-content">
+                <section class="lightt">
+                    <div class="container py-2">
+                        <div class="h1 text-center text-dark" id="pageHeaderTitle">Caregivers</div>
+                        @foreach (var caregiver in Model)
+                        {
+                            <article class="postcard lightt blue">
+                                <a class="postcard__img_link">
+                                    <img class="postcard__img" src="@caregiver.Users.ImageUrl" alt="image title" />
+                                </a>
+                                <div class="postcard__text t-dark">
+                                    <h1 class="postcard__title blue">@caregiver.Users.FirstName @caregiver.Users.LastName</h1>
+                                    <div class="postcard__subtitle small">
+                                        <p>@caregiver.Users.City</p>
+                                    </div>
+                                    <div class="postcard__bar"></div>
+                                    <div class="postcard__preview-txt">@caregiver.AboutYou</div>
+                                    <ul class="postcard__tagbox">
+                                        <li class="tag__item"><a asp-action="Profile" asp-route-id="@caregiver.Users.userId"><i class="fas fa-tag mr-2"></i>View Profile</a></li>
+                                    </ul>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-4 sidebar">
+                <div class="sidebar-box">
+                    <form asp-action="Caregiver" class="search-form">
+                        <div class="form-group">
+                            <span class="icon fa fa-search"></span>
+                            <input name="SearchItem" type="text" class="form-control" placeholder="Type a name of caregiver">
+                        </div>
+                        <div class="form-group">
+                            <select style="width:100%" class="form-select" name="id" asp-items="@(new SelectList(ViewBag.Services,"ServiceId","Name"))">
+                                <option value="">All</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="selectedDayOfWeek">Select Day of Week:</label>
+                            <select style="width:100%" class="form-select" name="selectedDayOfWeek">
+                                <option value="">All</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="startTime">Start Time:</label>
+                            <input type="time" name="startTime" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="endTime">End Time:</label>
+                            <input type="time" name="endTime" class="form-control">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

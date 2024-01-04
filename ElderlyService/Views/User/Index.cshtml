@@ -1,11 +1,14 @@
-﻿
+﻿@model ElderlyService.Controllers.UserController.ServiceAndTestimonials
+@{
+    ViewData["Title"] = "Home";
+}
 <div class="slide-item overlay" style="background-image: url('@Url.Content("~/images/slider-1.jpg")')">
     <div class="container">
         <div class="row">
             <div class="col-lg-6 align-self-center">
                 <h1 class="heading mb-3">Expert Care for the Elderly</h1>
-                <p class="lead text-white mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum totam alias iusto?</p>
-                <p><a href="#" class="btn btn-primary">Get In Touch</a></p>
+                <p class="lead text-white mb-5">At Elderly, we are committed to redefining elderly healthcare, and ensuring that every senior receives the attention and care they deserve.</p>
+                <p><a asp-action="Service" class="btn btn-primary">Explore Our Service</a></p>
             </div>
         </div>
     </div>
@@ -21,7 +24,7 @@
             <div>
                 <span class="subheading">Try Our Services</span>
                 <h3 class="heading">Independent Living For Senior Couples</h3>
-                <a href="#" class="small">Learn More</a>
+                <a asp-action="Service" class="small">Learn More</a>
             </div>
         </div>
         <div class="d-flex pagination-item h-100">
@@ -31,7 +34,7 @@
             <div>
                 <span class="subheading">Try Our Services</span>
                 <h3 class="heading">We Are Helping the Senior Elderly People</h3>
-                <a href="#" class="small">Learn More</a>
+                <a asp-action="Service" class="small">Learn More</a>
             </div>
         </div>
         <div class="d-flex pagination-item h-100">
@@ -41,94 +44,76 @@
             <div>
                 <span class="subheading">Try Our Services</span>
                 <h3 class="heading">Senior Home Patient Care Services</h3>
-                <a href="#" class="small">Learn More</a>
+                <a asp-action="Service" class="small">Learn More</a>
             </div>
         </div>
     </div>
 </div>
 
-
+@* Services *@
 <div class="site-section">
     <div class="container">
         <div class="row">
-            <div class="col-6 col-sm-6 col-md-6 mb-4 mb-lg-0 col-lg-3">
-                <div class="service">
-                    <a href="#" class="d-block"><img src="~/images/img_4_sq.jpg" alt="Image" class="img-fluid"></a>
-                    <div class="service-inner">
-                        <h3>Special Care</h3>
-                        <p>Lorem ipsum dolor sit amet elit.</p>
+            @foreach (var service in Model.Services)
+            {
+                <div class="col-6 col-sm-6 col-md-6 mb-4 mb-lg-0 col-lg-3">
+                    <div class="service">
+                        <a asp-action="Caregiver" asp-route-id="@service.ServiceId" class="d-block"><img src="@service.ImageUrl" alt="Image" class="img-fluid"></a>
+                        <div class="service-inner">
+                            <h3>@service.Name</h3>
+                            <p>@service.Description</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-6 col-sm-6 col-md-6 mb-4 mb-lg-0 col-lg-3">
-                <div class="service">
-                    <a href="#" class="d-block"><img src="~/images/img_1_sq.jpg" alt="Image" class="img-fluid"></a>
-                    <div class="service-inner">
-                        <h3>Special Care</h3>
-                        <p>Lorem ipsum dolor sit amet elit.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 col-sm-6 col-md-6 mb-4 mb-lg-0 col-lg-3">
-                <div class="service">
-                    <a href="#" class="d-block"><img src="~/images/img_2_sq.jpg" alt="Image" class="img-fluid"></a>
-                    <div class="service-inner">
-                        <h3>Special Care</h3>
-                        <p>Lorem ipsum dolor sit amet elit.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 col-sm-6 col-md-6 mb-4 mb-lg-0 col-lg-3">
-                <div class="service">
-                    <a href="#" class="d-block"><img src="~/images/img_3_sq.jpg" alt="Image" class="img-fluid"></a>
-                    <div class="service-inner">
-                        <h3>Special Care</h3>
-                        <p>Lorem ipsum dolor sit amet elit.</p>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </div>
-
+@{
+    var ProfessionalCaregiver = ViewBag.ProfessionalCaregiver;
+    var ServiceWeGive = ViewBag.ServiceWeGive;
+    var UserUseWebsite = ViewBag.UserUseWebsite;
+    var HappyPeople = ViewBag.HappyPeople;
+}
+@* statistics *@
 <div class="site-section bg-primary count-numbers">
     <div class="container">
         <div class="row">
             <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
                 <div class="counter-wrap text-center">
-                    <strong class="counter d-block"><span class="number" data-number="5890"></span></strong>
-                    <span>Rooms Available</span>
+                    <strong class="counter d-block"><span class="number" data-number="@ProfessionalCaregiver"></span></strong>
+                    <span>Professional Caregiver</span>
                 </div>
             </div>
             <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
                 <div class="counter-wrap text-center">
-                    <strong class="counter d-block"><span class="number" data-number="530"></span></strong>
-                    <span>Nurse Staff</span>
+                    <strong class="counter d-block"><span class="number" data-number="@ServiceWeGive"></span></strong>
+                    <span>Service We Give</span>
                 </div>
             </div>
             <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
                 <div class="counter-wrap text-center">
-                    <strong class="counter d-block"><span class="number" data-number="4029"></span></strong>
-                    <span>Senior Living</span>
+                    <strong class="counter d-block"><span class="number" data-number="@UserUseWebsite"></span></strong>
+                    <span>User Use Website</span>
                 </div>
             </div>
             <div class="col-6 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
                 <div class="counter-wrap text-center">
-                    <strong class="counter d-block"><span class="number" data-number="7020"></span></strong>
+                    <strong class="counter d-block"><span class="number" data-number="@HappyPeople"></span></strong>
                     <span>Happy People</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
+@* About US *@
 <div class="site-section">
     <div class="container">
         <div class="row justify-content-between">
             <div class="col-lg-7">
                 <div class="section-heading">
-                    <h2 class="heading mb-3">Senior Care Center is for Your Family</h2>
-                    <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore perspiciatis deleniti, maiores quia aliquam, odit iure aspernatur voluptate delectus ipsa.</p>
+                    <h2 class="heading mb-3">Health Care Elderly is for Your Family</h2>
+                    <p class="mb-5">Our healthcare project for the elderly is a compassionate initiative designed to cater to the unique needs of our senior community. Focused on providing comprehensive and personalized services.</p>
 
                     <div class="row">
                         <div class="col-lg-6">
@@ -136,9 +121,8 @@
                         </div>
                         <div class="col-lg-6">
                             <ul class="list-unstyled ul-check primary">
-                                <li>Consectetur adipisicing elit</li>
-                                <li>Voluptate delectus ipsa</li>
-                                <li>Maiores quia aliquam</li>
+                                <li>Tailored for individual needs.</li>
+                                <li>Fostering social well-being.</li>
                             </ul>
                         </div>
                     </div>
@@ -147,9 +131,6 @@
             <div class="col-lg-5">
 
                 <div class="d-block custom-media algin-items-stretch">
-                    <div class="text text-center">
-                        <h3>You can live here with love</h3>
-                    </div>
                     <div class="img-bg" style="background-image: url('@Url.Content("~/images/img_2.jpg")')"></div>
                 </div>
             </div>
@@ -162,209 +143,36 @@
         <div class="row ">
             <div class="col-lg-7 mx-auto text-center align-self-center">
                 <h1 class="mb-5 heading">Our Goal is to Make Your Life Better</h1>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="feature">
-                            <span class="img-wrap">
-                                <img src="~/images/svg/svg/006-elderly-3.svg" alt="Image" class="img-fluid">
-                            </span>
-                            <h3>Expert Nursing Staff</h3>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="feature">
-                            <span class="img-wrap">
-                                <img src="~/images/svg/svg/005-elderly-2.svg" alt="Image" class="img-fluid">
-                            </span>
-                            <h3>Expert Nursing Staff</h3>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="feature">
-                            <span class="img-wrap">
-                                <img src="~/images/svg/svg/004-nurse.svg" alt="Image" class="img-fluid">
-                            </span>
-                            <h3>Expert Nursing Staff</h3>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
-
+@* Testomonial *@
 <div class="site-section bg-light">
     <div class="container">
         <div class="row">
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
-                <div class="testimonial text-center">
-                    <img src="~/images/person_1.jpg" alt="Image" class="img-fluid">
-                    <blockquote>
-                        <p class="quote">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo repellendus nihil qui iure animi maxime consequuntur aliquid sed tempore, amet!</p>
-                        <cite class="author">Elizabeth Anderson, Senior</cite>
-                    </blockquote>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
-                <div class="testimonial text-center">
-                    <img src="~/images/person_1.jpg" alt="Image" class="img-fluid">
-                    <blockquote>
-                        <p class="quote">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo repellendus nihil qui iure animi maxime consequuntur aliquid sed tempore, amet!</p>
-                        <cite class="author">Elizabeth Anderson, Senior</cite>
-                    </blockquote>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
-                <div class="testimonial text-center">
-                    <img src="~/images/person_1.jpg" alt="Image" class="img-fluid">
-                    <blockquote>
-                        <p class="quote">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo repellendus nihil qui iure animi maxime consequuntur aliquid sed tempore, amet!</p>
-                        <cite class="author">Elizabeth Anderson, Senior</cite>
-                    </blockquote>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="site-section">
-    <div class="container">
-        <div class="row mb-5 justify-content-center">
-            <div class="col-7 text-center">
-                <div class="heading">
-                    <h2 class="text-black">Other Opportunities</h2>
-                </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, culpa.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 mb-4">
-                <div class="d-block d-flex custom-media algin-items-stretch">
-                    <div class="text text-left">
-                        <h3>You can live here with love</h3>
-                        <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae, commodi.</p>
-                        <p><a href="#" class="btn btn-outline-white">Learn More</a></p>
+            @{
+                int count = 0;
+            }
+            @foreach (var testimonials in Model.ReviewsForWebsitess.OrderBy(t => t.DateTime))
+            {
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
+                    <div class="testimonial text-center">
+                        <img src="@testimonials.Users.ImageUrl" alt="Image" class="img-fluid">
+                        <blockquote>
+                            <p class="quote">@testimonials.Comment</p>
+                            <cite class="author">@testimonials.Users.FirstName @testimonials.Users.LastName</cite>
+                        </blockquote>
                     </div>
-                    <div class="img-bg" style="background-image: url('@Url.Content("~/images/img_2.jpg")')"></div>
                 </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="d-block d-flex custom-media algin-items-stretch">
-                    <div class="text text-left">
-                        <h3>You can live here with love</h3>
-                        <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae, commodi.</p>
-                        <p><a href="#" class="btn btn-outline-white">Learn More</a></p>
-                    </div>
-                    <div class="img-bg" style="background-image: url('@Url.Content("~/images/img_3.jpg")')"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="site-section bg-primary">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-lg-6 mb-5 mb-md-0">
-                <img src="~/images/about.png" alt="Image" class="img-fluid">
-            </div>
-            <div class="col-md-6 col-lg-5 ml-auto">
-                <div class="section-heading">
-                    <h2 class="heading mb-3 text-white">Senior &amp; Elder Home Care Center</h2>
-
-                    <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique amet nostrum facere hic! Inventore cumque ipsam eum, sit sequi illum.</p>
-                    <p class="mb-4 text-white">Optio ex ullam eveniet magnam molestiae laborum, dignissimos dolorum ipsam minus, ipsum vel illo aut molestias suscipit voluptatem hic voluptatibus!</p>
-                    <p class="text-white mb-5"><strong class="h3">&ldquo;We care for elderly people&rdquo;</strong></p>
-                    <p><a href="#" class="btn btn-white">Learn More</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-<div class="site-section">
-    <div class="container">
-        <div class="row mb-5 justify-content-center">
-            <div class="col-7 text-center">
-                <div class="heading">
-                    <h2 class="text-black">News &amp; Updates</h2>
-                </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi, culpa.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="blog-entry">
-                    <a href="#" class="d-block">
-                        <img src="~/images/img_1.jpg" alt="Image" class="img-fluid">
-                    </a>
-                    <div class="post-meta d-flex justify-content-center">
-                        <span>
-                            <span class="icon-calendar"></span>
-                            <span>23 Jul</span>
-                        </span>
-                        <span>
-                            <span class="icon-user"></span>
-                            <span>Admin</span>
-                        </span>
-                        <span>
-                            <span class="icon-comment"></span>
-                            <span>2 Comments</span>
-                        </span>
-                    </div>
-                    <h2><a href="#">We're Providing the Quality Care</a></h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, laudantium.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="blog-entry">
-                    <a href="#" class="d-block">
-                        <img src="~/images/img_2.jpg" alt="Image" class="img-fluid">
-                    </a>
-                    <div class="post-meta d-flex justify-content-center">
-                        <span>
-                            <span class="icon-calendar"></span>
-                            <span>23 Jul</span>
-                        </span>
-                        <span>
-                            <span class="icon-user"></span>
-                            <span>Admin</span>
-                        </span>
-                        <span>
-                            <span class="icon-comment"></span>
-                            <span>2 Comments</span>
-                        </span>
-                    </div>
-                    <h2><a href="#">We're Providing the Quality Care</a></h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, laudantium.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="blog-entry">
-                    <a href="#" class="d-block">
-                        <img src="~/images/img_3.jpg" alt="Image" class="img-fluid">
-                    </a>
-                    <div class="post-meta d-flex justify-content-center">
-                        <span>
-                            <span class="icon-calendar"></span>
-                            <span>23 Jul</span>
-                        </span>
-                        <span>
-                            <span class="icon-user"></span>
-                            <span>Admin</span>
-                        </span>
-                        <span>
-                            <span class="icon-comment"></span>
-                            <span>2 Comments</span>
-                        </span>
-                    </div>
-                    <h2><a href="#">We're Providing the Quality Care</a></h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, laudantium.</p>
-                </div>
-            </div>
+                count++;
+                if(count == 2)
+                {
+                    break;
+                }
+            }
         </div>
     </div>
 </div>
