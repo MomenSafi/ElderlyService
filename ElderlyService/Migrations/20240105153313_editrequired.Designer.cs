@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElderlyService.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240104154903_editDB")]
-    partial class editDB
+    [Migration("20240105153313_editrequired")]
+    partial class editrequired
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

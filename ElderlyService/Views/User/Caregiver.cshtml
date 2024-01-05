@@ -70,7 +70,23 @@
                                     <div class="postcard__bar"></div>
                                     <div class="postcard__preview-txt">@caregiver.AboutYou</div>
                                     <ul class="postcard__tagbox">
+                                        @{
+                                            var averageRating = caregiver.Reviews.Any() ? caregiver.Reviews.Average(r => r.Rate) : 0.0;
+                                        }
+
                                         <li class="tag__item"><a asp-action="Profile" asp-route-id="@caregiver.Users.userId"><i class="fas fa-tag mr-2"></i>View Profile</a></li>
+                                        <li class="tag__item">
+                                            @if (caregiver.Reviews.Any())
+                                            {
+                                                <div>
+                                                    <p>Average Rating: @String.Format("{0:F1}", averageRating) / 5</p>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <p>No reviews yet.</p>
+                                            }
+                                        </li>
                                     </ul>
                                 </div>
                             </article>

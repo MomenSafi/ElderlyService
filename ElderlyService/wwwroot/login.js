@@ -39,3 +39,70 @@ let mainF = (e) => {
 };
 
 window.addEventListener("load", mainF);
+
+function validateForm() {
+	var name = document.getElementById("Name").value;
+	var email = document.getElementById("Email").value;
+	var password = document.getElementById("Password").value;
+
+	var nameError = document.getElementById("nameError");
+	var emailError = document.getElementById("emailError");
+	var passwordError = document.getElementById("passwordError");
+
+	// Reset previous errors
+	nameError.innerHTML = "";
+	emailError.innerHTML = "";
+	passwordError.innerHTML = "";
+
+	var isValid = true;
+
+	// Validate Name
+	if (name.trim() === "") {
+		nameError.innerHTML = "Name is required";
+		isValid = false;
+	}
+
+	// Validate Email
+	if (!isValidEmail(email)) {
+		emailError.innerHTML = "Invalid email address";
+		isValid = false;
+	}
+
+	// Validate Password
+	if (password.length < 8) {
+		passwordError.innerHTML = "Password must be at least 8 characters long";
+		isValid = false;
+	} else if (!containsUpperCase(password)) {
+		// // passwordError.innerHTML = "";
+		passwordError.innerHTML = "Password must contain at least one uppercase letter";
+		isValid = false;
+	} else if (!containsLowerCase(password)) {
+		// passwordError.innerHTML = "";
+		passwordError.innerHTML = "Password must contain at least one lowercase letter";
+		isValid = false;
+	} else if (!containsDigit(password)) {
+		// passwordError.innerHTML = "";
+		passwordError.innerHTML = "Password must contain at least one digit";
+		isValid = false;
+	}
+
+	return isValid;
+}
+
+function isValidEmail(email) {
+	// Regular expression for a valid email address
+	var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+	return emailRegex.test(email);
+}
+
+function containsUpperCase(str) {
+	return /[A-Z]/.test(str);
+}
+
+function containsLowerCase(str) {
+	return /[a-z]/.test(str);
+}
+
+function containsDigit(str) {
+	return /\d/.test(str);
+}

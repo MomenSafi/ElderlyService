@@ -4,6 +4,7 @@ using ElderlyService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElderlyService.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240105154309_editrequiredInput")]
+    partial class editrequiredInput
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,7 +171,7 @@ namespace ElderlyService.Migrations
                     b.Property<int?>("PriceOfService")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ServiceId")
+                    b.Property<int>("ServiceId")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Valid")
@@ -518,7 +521,8 @@ namespace ElderlyService.Migrations
                     b.HasOne("ElderlyService.Models.Service", "Service")
                         .WithMany("Caregivers")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("ElderlyService.Models.Users", "Users")
                         .WithMany("caregivers")

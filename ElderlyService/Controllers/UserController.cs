@@ -51,7 +51,10 @@ namespace ElderlyService.Controllers
         {
             List<Caregiver> caregiver;
             ViewBag.Services = _db.services.ToList();
-            caregiver = _db.Caregivers.Include(c => c.Users).ToList();
+            caregiver = _db.Caregivers
+                .Include(c => c.Users)
+                .Include(c=>c.Reviews)
+                .Where(c=>c.Valid == true).ToList();
             if (id != null)
             {
                 caregiver = caregiver.Where(s => s.ServiceId == id).ToList();
@@ -112,6 +115,7 @@ namespace ElderlyService.Controllers
 
             // Retrieve caregivers with their average rating
             var caregiversWithRating = _db.Caregivers
+                .Where(c=>c.Valid == true)
                 .Include(c => c.Reviews) // Include Reviews navigation property
                 .Where(c => c.Reviews.Any()) // Only include caregivers with at least one review
                 .Select(c => new
@@ -147,5 +151,9 @@ namespace ElderlyService.Controllers
             return View();
         }
 
+        public IActionResult MyProfile()
+        {
+            return View();
+        }
     }
 }

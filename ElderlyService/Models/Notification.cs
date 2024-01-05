@@ -9,7 +9,7 @@ namespace ElderlyService.Models
         public int NotificationId { get; set; }
         public string content { get; set; }
         public DateTime DateTime { get; set; } = DateTime.Now;
-        public bool IsRead { get; set; }
+        public bool IsRead { get; set; } = false;
         public string userId { get; set; }
         public Users users { get; set; }
     }

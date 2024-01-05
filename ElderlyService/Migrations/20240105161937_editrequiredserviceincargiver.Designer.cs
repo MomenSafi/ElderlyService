@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElderlyService.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240102180237_buildDatabase")]
-    partial class buildDatabase
+    [Migration("20240105161937_editrequiredserviceincargiver")]
+    partial class editrequiredserviceincargiver
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,7 +54,6 @@ namespace ElderlyService.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartTime")
@@ -110,6 +109,34 @@ namespace ElderlyService.Migrations
                     b.ToTable("Availabilities");
                 });
 
+            modelBuilder.Entity("ElderlyService.Models.AvilableForThisWeek", b =>
+                {
+                    b.Property<int>("AvilableForThisWeekID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AvilableForThisWeekID"));
+
+                    b.Property<string>("CaregiverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("AvilableForThisWeekID");
+
+                    b.HasIndex("CaregiverId");
+
+                    b.ToTable("AvilableForThisWeek");
+                });
+
             modelBuilder.Entity("ElderlyService.Models.CardData", b =>
                 {
                     b.Property<string>("CardId")
@@ -136,23 +163,21 @@ namespace ElderlyService.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AboutYou")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EndSubscribe")
+                    b.Property<DateTime?>("EndSubscribe")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PriceOfService")
+                    b.Property<int?>("PriceOfService")
                         .HasColumnType("int");
 
-                    b.Property<int>("ServiceId")
+                    b.Property<int?>("ServiceId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Valid")
+                    b.Property<bool?>("Valid")
                         .HasColumnType("bit");
 
                     b.Property<string>("userId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CaregiverId");
@@ -357,15 +382,12 @@ namespace ElderlyService.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceId"));
 
                     b.Property<string>("ContentType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -383,10 +405,9 @@ namespace ElderlyService.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -412,7 +433,6 @@ namespace ElderlyService.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleId")
@@ -474,6 +494,17 @@ namespace ElderlyService.Migrations
                     b.Navigation("Caregiver");
                 });
 
+            modelBuilder.Entity("ElderlyService.Models.AvilableForThisWeek", b =>
+                {
+                    b.HasOne("ElderlyService.Models.Caregiver", "Caregiver")
+                        .WithMany("AvilableForThisWeek")
+                        .HasForeignKey("CaregiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Caregiver");
+                });
+
             modelBuilder.Entity("ElderlyService.Models.CardData", b =>
                 {
                     b.HasOne("ElderlyService.Models.Caregiver", "Caregiver")
@@ -490,14 +521,12 @@ namespace ElderlyService.Migrations
                     b.HasOne("ElderlyService.Models.Service", "Service")
                         .WithMany("Caregivers")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ElderlyService.Models.Users", "Users")
                         .WithMany("caregivers")
                         .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Service");
 
@@ -583,6 +612,8 @@ namespace ElderlyService.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Availabilities");
+
+                    b.Navigation("AvilableForThisWeek");
 
                     b.Navigation("CardDatas");
 

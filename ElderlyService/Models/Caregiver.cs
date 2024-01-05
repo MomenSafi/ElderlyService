@@ -9,17 +9,16 @@ namespace ElderlyService.Models
         [Key]
         [Required]
         public string CaregiverId { get; set; }
-        [Required]
+
         [DisplayName("Price of Service per hour")]
-        public int PriceOfService { get; set; }
-        public bool Valid { get; set; } = false;
-        public DateTime EndSubscribe { get; set; }
-        [Required]
-        public string AboutYou { get; set; }
-        public string userId { get; set; }
+        public int? PriceOfService { get; set; }
+        public bool? Valid { get; set; } = false;
+        public DateTime? EndSubscribe { get; set; }
+        public string? AboutYou { get; set; }
+        public string? userId { get; set; }
         public Users Users { get; set; }
-        public int ServiceId { get; set; }
-        public Service Service { get; set; }
+        public int? ServiceId { get; set; }
+        public Service? Service { get; set; }
         [ForeignKey("CaregiverId")]
         public ICollection<Reviews> Reviews { get; set; }
         [ForeignKey("CaregiverId")]

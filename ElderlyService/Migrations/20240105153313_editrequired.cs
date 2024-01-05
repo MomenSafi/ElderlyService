@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ElderlyService.Migrations
 {
     /// <inheritdoc />
-    public partial class buildDatabase : Migration
+    public partial class editrequired : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -200,6 +200,28 @@ namespace ElderlyService.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AvilableForThisWeek",
+                columns: table => new
+                {
+                    AvilableForThisWeekID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DayOfWeek = table.Column<int>(type: "int", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CaregiverId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AvilableForThisWeek", x => x.AvilableForThisWeekID);
+                    table.ForeignKey(
+                        name: "FK_AvilableForThisWeek_Caregivers_CaregiverId",
+                        column: x => x.CaregiverId,
+                        principalTable: "Caregivers",
+                        principalColumn: "CaregiverId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cards",
                 columns: table => new
                 {
@@ -323,6 +345,11 @@ namespace ElderlyService.Migrations
                 column: "CaregiverId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AvilableForThisWeek_CaregiverId",
+                table: "AvilableForThisWeek",
+                column: "CaregiverId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cards_CaregiverId",
                 table: "Cards",
                 column: "CaregiverId");
@@ -387,6 +414,9 @@ namespace ElderlyService.Migrations
 
             migrationBuilder.DropTable(
                 name: "Availabilities");
+
+            migrationBuilder.DropTable(
+                name: "AvilableForThisWeek");
 
             migrationBuilder.DropTable(
                 name: "Cards");

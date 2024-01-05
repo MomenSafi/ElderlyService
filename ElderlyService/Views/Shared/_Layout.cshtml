@@ -87,13 +87,13 @@
                                 }
                                 @if (!string.IsNullOrEmpty(liveUser))
                                 {
-                                    <li class="nav-item"><a asp-controller="Customer" asp-action="Profile" class="nav-link">Profile</a></li>
-                                    <li class="nav-item"><a asp-controller="Customer" asp-action="Notification" class="nav-link">Notification</a></li>
+                                    <li class="nav-item"><a asp-controller="User" asp-action="Profile" class="nav-link">Profile</a></li>
+                                    <li class="nav-item"><a asp-controller="User" asp-action="Notification" class="nav-link">Notification</a></li>
                                     <li class="nav-item"><a asp-controller="Login" asp-action="Logout" class="nav-link">Logout</a></li>
                                 }
                                 else
                                 {
-                                    <li class="nav-item"><a asp-controller="Login" asp-action="Index" class="nav-link">Login</a></li>
+                                    <li class="nav-item"><a asp-controller="Login" asp-action="Login" class="nav-link">Login</a></li>
                                 }
 
                                 <li class="social"><a href="https://github.com/MomenSafi/ElderlyService" target="_blank" class="nav-link"><span class="icon-github"></span></a></li>

@@ -26,7 +26,7 @@ namespace ElderlyService.Models
         [Required]
         public DateTime BookingDate { get; set; }
         public Days DayOfWeek { get; set; }
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
         [Url]
         [Required]
         public string Location { get; set; }

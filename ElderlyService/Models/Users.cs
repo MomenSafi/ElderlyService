@@ -16,24 +16,25 @@ namespace ElderlyService.Models
         [Required]
         [DisplayName("Last Name")]
         public string LastName { get; set; }
+
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
         [Required]
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; }
-        [Required]
-        public string Phone { get; set; }
-        [Required]
-        public string City { get; set; }
-        [Required]
+        public string? Phone { get; set; }
+        public string? City { get; set; }
         [DisplayName("Date of birth")]
-        public DateTime DateOfBirth { get; set; }
-        [Required]
+        public DateTime? DateOfBirth { get; set; }
         public int Gender { get; set; }
         [NotMapped]
         public IFormFile? ImageFile { get; set; }
-        public string? ImageUrl { get; set; } 
+        public string? ImageUrl { get; set; }
+
+        [NotMapped]
+        public bool IsCaregiver { get; set; } = false;
         public string RoleId { get; set; }
         public Roles Roles { get; set; }
         [ForeignKey("userId")]

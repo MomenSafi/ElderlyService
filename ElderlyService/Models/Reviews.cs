@@ -19,7 +19,7 @@ namespace ElderlyService.Models
         [Range(1, 5, ErrorMessage = "Rate must be between 1 and 5.")]
         public int Rate { get; set; }
         [Required]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
         public DateTime DateTime { get; set; } = DateTime.Now;
         public Status status { get; set; } = Status.pending;
         public string userId { get; set; }

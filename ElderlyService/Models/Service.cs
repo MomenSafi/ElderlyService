@@ -10,9 +10,9 @@ namespace ElderlyService.Models
         public string Name { get; set; }
         [NotMapped]
         public IFormFile? ImageFile { get; set; }
-        public string ImageUrl { get; set; } 
-        public string ContentType { get; set; } 
-        public string Description { get; set; }
+        public string? ImageUrl { get; set; } 
+        public string? ContentType { get; set; } 
+        public string? Description { get; set; }
         [ForeignKey("ServiceId")]
         public ICollection<Caregiver> Caregivers { get; set; }
 
