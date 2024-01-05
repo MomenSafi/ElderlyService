@@ -13,6 +13,7 @@ namespace ElderlyService.Models
         public string? ImageUrl { get; set; } 
         public string? ContentType { get; set; } 
         public string? Description { get; set; }
+        public bool valid { get; set; } = true;
         [ForeignKey("ServiceId")]
         public ICollection<Caregiver> Caregivers { get; set; }
 
