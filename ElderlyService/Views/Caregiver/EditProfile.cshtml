@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@model Caregiver
+
+<header>
+
+    <style>
+        <link href="~/editprofile/editprofile.css" rel="stylesheet" / >
+    </style>
+</header>
+<body>
+    <form class="container" asp-action="EditProfile" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
+        <div class="row gutters">
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="account-settings">
+                            <div class="user-profile">
+                                <div class="user-avatar">
+                                    <img src="@Url.Content(Model.Users.ImageUrl)" alt="" />
+
+                                    <label style="border-radius:1px; margin-top:8px" class="btn btn-primary">
+                                        Change Photo
+                                        <input asp-for="@Model.Users.ImageFile" type="file" value="@Model.Users.ImageUrl" class="form-control shadow-sm" id="exampleInput" placeholder="Enter something..." style="display: none;">
+                                    </label>
+                                </div>
+                                <h5 class="user-name">@Model.Users.FirstName @Model.Users.LastName</h5>
+                                <h6 class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f262a34361f123e27283a3333713c3032">@Model.Users.Email</a></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="row gutters">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <h6 class="mb-2 text-primary">Personal Details</h6>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label asp-for="Users.FirstName">First Name</label>
+                                    <input asp-for="Users.FirstName" type="text" class="form-control" id="fName" placeholder="Enter first name">
+                                    <span id="nameError" class="error-message"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label asp-for="Users.LastName">Last Name</label>
+                                    <input asp-for="Users.LastName" type="text" class="form-control" id="lName" placeholder="Enter last name">
+                                    <span id="nameError" class="error-message"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label asp-for="Users.Email">Email</label>
+                                    <input asp-for="Users.Email" type="email" class="form-control" id="Email" placeholder="Enter email ID">
+                                    <span id="emailError" class="error-message"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label asp-for="Users.Phone">Phone</label>
+                                    <input asp-for="Users.Phone" type="text" class="form-control" id="Phone" placeholder="Enter phone number">
+                                    <span id="phoneError" class="error-message"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row gutters">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <h6 class="mt-3 mb-2 text-primary">Address</h6>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label asp-for="Users.City">City</label>
+                                    <input asp-for="Users.City" type="text" class="form-control" id="City" required placeholder="Enter City">
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label asp-for="Users.DateOfBirth">Date of birth</label>
+                                    <input asp-for="Users.DateOfBirth" type="date" class="form-control" id="date">
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label asp-for="PriceOfService">Price of service</label>
+                                    <input asp-for="PriceOfService" type="number" class="form-control" id="PriceOfService" placeholder="price / hr">
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label asp-for="AboutYou">About You</label>
+                                    <textarea asp-for="AboutYou" cols="30" rows="7" type="text" class="form-control" id="AboutYou"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label asp-for="Service.Name">Service Name</label>
+                                    <select asp-for="Service.ServiceId" asp-items="@(ViewBag.Services)" class="form-control" id="Service"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row gutters">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="text-right">
+                                    <a asp-controller="User" asp-action="CaregiverProfile" name="submit" style="border-radius:1px" class="btn btn-secondary">Cancel</a>
+                                    <button asp-controller="User" asp-action="CaregiverProfile" type="submit" id="submit" style="border-radius:1px" name="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <script src="~/editprofile/editprofile.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript"></script>
+</body>

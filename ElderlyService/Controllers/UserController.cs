@@ -146,14 +146,70 @@ namespace ElderlyService.Controllers
         }
 
 
-        public IActionResult Profile(string id)
+        public IActionResult Profile(string id = "e3d7a690-c993-4bf4-8252-d3218584141c")
         {
-            return View();
+            var caregiver = _db.Caregivers
+                .Include(c=>c.Users)
+                    .ThenInclude(u=>u.Roles)
+                .Include(c=>c.Reviews)
+                .Include(c=>c.Service)
+                .Include(c=>c.Experiences)
+                .Include(c=>c.AvilableForThisWeek)
+                .FirstOrDefault(c=>c.CaregiverId == id);
+            return View(caregiver);
         }
 
         public IActionResult MyProfile()
         {
-            return View();
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if(user.RoleId == "2")
+            {
+                return RedirectToAction("CaregiverProfile");
+            }
+            else
+            {
+                return RedirectToAction("UserProfile");
+            }
+            
+        }
+        public IActionResult CaregiverProfile()
+        {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            var caregiver = _db.Caregivers
+                .Include(c => c.Users)
+                   .ThenInclude(u => u.Roles)
+               .Include(c => c.Reviews)
+               .Include(c => c.Service)
+               .Include(c => c.Experiences)
+               .Include(c => c.AvilableForThisWeek)
+               .Include(c=>c.Appointments)
+                .FirstOrDefault(c => c.Users.userId == user.userId);
+            return View(caregiver);
+        }
+
+        public IActionResult UserProfile()
+        {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            return View(user);
+        }
+
+        public IActionResult AddReview(string message, int rate, string Id)
+        {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            var review = new Reviews();
+            review.userId = user.userId;
+            review.CaregiverId = Id;
+            review.Rate = rate;
+            review.Comment = message;
+
+            _db.Reviews.Add(review);
+            _db.SaveChanges();
+            TempData["info"] = "Your testimonial has been submitted for review. Thank you for your feedback!";
+            return RedirectToAction("Profile", new { id = Id });
         }
     }
 }

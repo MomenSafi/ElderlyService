@@ -41,13 +41,10 @@ namespace ElderlyService.Controllers
                         return View();
                     }
                 }
-                else
-                {
-                    TempData["info"] = "This Email isn't registered, please SignUp";
-                    return View();
-                }
             }
-            return View();
+
+                TempData["info"] = "This Email isn't registered, please SignUp";
+                return View();            
         }
         public IActionResult Logout()
         {
