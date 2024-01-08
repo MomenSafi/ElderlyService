@@ -1,0 +1,141 @@
+﻿@model Users
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<head>
+    <style>
+        .editimg {
+            position: relative;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: right center;
+            height: 60vh;
+            min-height: 40vh;
+            display: flex;
+            align-items: center
+        }
+
+            .editimg:before {
+                background-image: linear-gradient(to left, rgba(77,39,63,0) 0%, #463b46 100%) !important;
+            }
+
+        .auto-container {
+            position: relative;
+            max-width: 1210px;
+            padding: 0px 20px;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: relative !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            line-height: 1.2em !important;
+            margin-bottom: 10px !important;
+            font-size: 62px !important;
+            text-transform: capitalize !important;
+            text-align: center;
+        }
+
+    </style>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="~/profile.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+<div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
+    <div class="auto-container">
+    </div>
+</div>
+
+<div class="container emp-profile">
+    <form method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-img">
+                    <img src="@Model.ImageUrl" alt="" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h5>
+                        @Model.FirstName @Model.LastName
+                    </h5>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Main Information</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <a asp-controller="User" asp-action="EditProfile" asp-route-id="@Model.userId" class="btn btn-primary" style="margin:5px">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-work">
+                    <p>Contact</p>
+                    <a>Email: @Model.Email</a><br />
+                    <a>Phone: @Model.Phone</a><br />
+                    <a>City: @Model.City</a>
+
+                    <p>Personal Information</p>
+                    <a>Birth Date: @Model.DateOfBirth</a><br />
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Appointment</label>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Caregiver Name</th>
+                                            <th scope="col">Booking Date</th>
+                                            <th scope="col">Start Time</th>
+                                            <th scope="col">End Time</th>
+                                            <th scope="col">Location</th>
+                                            <th scope="col">Notes</th>
+                                            <th scope="col">Status</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var obj in Model.Appointments.OrderBy(a => a.BookingDate))
+                                        {
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>@obj.Caregiver.Users.FirstName @obj.Caregiver.Users.LastName</td>
+                                                <td>@obj.BookingDate</td>
+                                                <td>@obj.StartTime</td>
+                                                <td>@obj.EndTime</td>
+                                                <td>
+                                                    <a href="@obj.Location" target="_blank" class="btn btn-primary mx-2">
+                                                        <i class="bi bi-check"></i> Location
+                                                    </a>
+                                                </td>
+                                                <td>@obj.Notes</td>
+                                                <td>@obj.status</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

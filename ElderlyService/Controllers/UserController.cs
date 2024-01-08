@@ -11,9 +11,11 @@ namespace ElderlyService.Controllers
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public UserController(ApplicationDbContext db)
+        private readonly IWebHostEnvironment webHostEnvironment;
+        public UserController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
 
@@ -195,6 +197,33 @@ namespace ElderlyService.Controllers
             var user = JsonConvert.DeserializeObject<Users>(userJson);
             return View(user);
         }
+
+        public IActionResult EditProfile(string id)
+        {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            return View(user);
+        }
+
+        [HttpPost]
+        public IActionResult EditProfile(Users user)
+        {
+            if (user.ImageFile != null)
+            {
+                string wwwRootPath = webHostEnvironment.WebRootPath;
+                string fileName = Guid.NewGuid().ToString() + "" + user.ImageFile.FileName;
+                string path = Path.Combine(wwwRootPath + "/Image/", fileName);
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    user.ImageFile.CopyTo(fileStream);
+                }
+                user.ImageUrl = "/Image/" + fileName;
+            }
+            _db.Users.Update(user);
+            _db.SaveChanges();
+            return RedirectToAction("UserProfile", "User");
+        }
+
 
         public IActionResult AddReview(string message, int rate, string Id)
         {

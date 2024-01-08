@@ -8,9 +8,11 @@ namespace ElderlyService.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public AdminController (ApplicationDbContext db)
+        private readonly IWebHostEnvironment webHostEnvironment;
+        public AdminController (ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            this.webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {

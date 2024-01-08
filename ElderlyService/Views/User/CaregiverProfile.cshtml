@@ -100,7 +100,6 @@
 </head>
 <div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
     <div class="auto-container">
-        <h1 class="heading mb-3 header">About Us</h1>
     </div>
 </div>
 
@@ -133,6 +132,7 @@
                         <p class="proile-rating">RANKINGS : <span>No reviews yet.</span></p>
 
                     }
+                    <p class="proile-rating">Your account is active to<span>@Model.EndSubscribe</span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Main Information</a>
@@ -147,8 +147,11 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <a asp-controller="Caregiver" asp-action="EditProfile" asp-route-id="@Model.CaregiverId" class="btn btn-primary">
+                <a asp-controller="Caregiver" asp-action="EditProfile" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
                     Edit Profile
+                </a>
+                <a asp-controller="Caregiver" asp-action="Subscribe" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
+                    Active Your Account
                 </a>
             </div>
         </div>
@@ -191,6 +194,7 @@
                                             <th scope="col">Notes</th>
                                             <th scope="col">Status</th>
                                             <th scope="col">Action</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -210,7 +214,6 @@
                                                 </td>
                                                 <td>@obj.Notes</td>
                                                 <td>@obj.status</td>
-                                                <td>@obj.StartTime</td>
                                                 <td>
                                                     <a asp-controller="Caregiver" asp-action="ApproveAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-primary mx-2">
                                                         <i class="bi bi-check"></i> Approve
@@ -230,6 +233,9 @@
                         <div class="col-12">
                             <div class="rounded h-100 p-4">
                                 <h6 class="mb-4">Availability</h6>
+                                <a asp-controller="Caregiver" asp-action="AddAvailability" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
+                                    Add available Time
+                                </a>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -238,6 +244,7 @@
                                                 <th scope="col">Day of week</th>
                                                 <th scope="col">From</th>
                                                 <th scope="col">To</th>
+                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -248,6 +255,14 @@
                                                     <td>@obj.DayOfWeek</td>
                                                     <td>@obj.StartTime</td>
                                                     <td>@obj.EndTime</td>
+                                                    <td>
+                                                        <a asp-controller="Caregiver" asp-action="EditAvailable" asp-route-id="@obj.AvilableForThisWeekID" class="btn btn-primary mx-2">
+                                                            <i class="bi bi-pencil-square"></i> Edit
+                                                        </a>
+                                                        <a data-id="@obj.AvilableForThisWeekID" class="btn btn-danger mx-2">
+                                                            <i class="bi bi-trash-fill DeleteAvailable"></i> Delete
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                             }
                                         </tbody>
@@ -260,6 +275,9 @@
                         <div class="col-12">
                             <div class="rounded h-100 p-4">
                                 <h6 class="mb-4">Experience</h6>
+                                <a asp-controller="Caregiver" asp-action="AddExperience" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
+                                    Add Experience
+                                </a>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -268,16 +286,25 @@
                                                 <th scope="col">place of work</th>
                                                 <th scope="col">From</th>
                                                 <th scope="col">To</th>
+                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var obj in Model.Experiences.OrderBy(e=>e.EndDate))
+                                            @foreach (var obj in Model.Experiences.OrderBy(e => e.EndDate))
                                             {
                                                 <tr>
                                                     <th scope="row">1</th>
                                                     <td>@obj.placeOfExperience</td>
                                                     <td>@obj.StartDate</td>
                                                     <td>@obj.EndDate</td>
+                                                    <td>
+                                                        <a asp-controller="Caregiver" asp-action="EditExperiences" asp-route-id="@obj.ExperienceId" class="btn btn-primary mx-2">
+                                                            <i class="bi bi-pencil-square"></i> Edit
+                                                        </a>
+                                                        <a data-id="@obj.ExperienceId" class="btn btn-danger mx-2">
+                                                            <i class="bi bi-trash-fill DeleteExperiences"></i> Delete
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                             }
                                         </tbody>
@@ -320,3 +347,44 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $('.DeleteAvailable').on('click', function () {
+        var id = $(this).data('id');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // User clicked Yes, handle the deletion here
+                window.location.href = '@Url.Action("DeleteAvailable", "Caregiver")' + '?id=' + id;
+            }
+        });
+    });
+
+    $('.DeleteExperiences').on('click', function () {
+        var id = $(this).data('id');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // User clicked Yes, handle the deletion here
+                window.location.href = '@Url.Action("DeleteExperiences", "Caregiver")' + '?id=' + id;
+            }
+        });
+    });
+</script>>

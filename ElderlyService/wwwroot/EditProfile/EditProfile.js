@@ -1,36 +1,29 @@
-﻿
-
-
-function validateForm() {
+﻿function validateForm() {
     var fname = document.getElementById("fName").value;
     var lname = document.getElementById("lName").value;
     var email = document.getElementById("Email").value;
-    var password = document.getElementById("Password").value;
     var phoneNumber = document.getElementById("Phone").value;
-    var locationUrl = document.getElementById("Location").value;
+    var dateOfBirth = document.getElementById("date").value;
+    var priceOfService = document.getElementById("PriceOfService").value;
 
     var nameError = document.getElementById("nameError");
     var emailError = document.getElementById("emailError");
-    var passwordError = document.getElementById("passwordError");
     var phoneError = document.getElementById("phoneError");
-    var locationError = document.getElementById("locationError");
+    var dateError = document.getElementById("dateError");
+    var priceOfServiceError = document.getElementById("PriceOfServiceError");
 
     // Reset previous errors
     nameError.innerHTML = "";
     emailError.innerHTML = "";
-    passwordError.innerHTML = "";
     phoneError.innerHTML = "";
-    locationError.innerHTML = "";
+    dateError.innerHTML = "";
+    priceOfServiceError.innerHTML = "";
 
     var isValid = true;
 
     // Validate Name
-    if (fname.trim() === "") {
-        nameError.innerHTML = "Name is required";
-        isValid = false;
-    }
-    if (lname.trim() === "") {
-        nameError.innerHTML = "Name is required";
+    if (fname.trim() === "" || lname.trim() === "") {
+        nameError.innerHTML = "First and Last Name are required";
         isValid = false;
     }
 
@@ -49,59 +42,26 @@ function validateForm() {
         isValid = false;
     }
 
-    // Validate Location URL
-    if (locationUrl.trim() === "") {
-        locationError.innerHTML = "Location URL is required";
+    // Validate Date of Birth (minimum 22 years)
+    if (dateOfBirth.trim() === "") {
+        dateError.innerHTML = "Date of birth is required";
         isValid = false;
-    } else if (!isValidUrl(locationUrl)) {
-        locationError.innerHTML = 'Invalid URL format';
-        isValid = false;
+    } else {
+        var currentDate = new Date();
+        var selectedDate = new Date(dateOfBirth);
+        var ageDifference = currentDate.getFullYear() - selectedDate.getFullYear();
+
+        if (ageDifference < 22) {
+            dateError.innerHTML = "Must be at least 22 years old";
+            isValid = false;
+        }
     }
 
-    // Validate Password
-    if (password.length < 8) {
-        passwordError.innerHTML = "Password must be at least 8 characters long";
-        isValid = false;
-    } else if (!containsUpperCase(password)) {
-        passwordError.innerHTML = "Password must contain at least one uppercase letter";
-        isValid = false;
-    } else if (!containsLowerCase(password)) {
-        passwordError.innerHTML = "Password must contain at least one lowercase letter";
-        isValid = false;
-    } else if (!containsDigit(password)) {
-        passwordError.innerHTML = "Password must contain at least one digit";
+    // Validate Price of Service (non-negative)
+    if (parseFloat(priceOfService) < 0) {
+        priceOfServiceError.innerHTML = "Price cannot be negative";
         isValid = false;
     }
 
     return isValid;
 }
-
-function isValidEmail(email) {
-    // Regular expression for a valid email address
-    var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
-    return emailRegex.test(email);
-}
-
-function containsUpperCase(str) {
-    return /[A-Z]/.test(str);
-}
-
-function containsLowerCase(str) {
-    return /[a-z]/.test(str);
-}
-
-function containsDigit(str) {
-    return /\d/.test(str);
-}
-
-function isValidUrl(url) {
-    var urlRegex = /^(http|https):\/\/[^ "]+$/;
-    return urlRegex.test(url);
-}
-
-function isValidPhoneNumber(phoneValue) {
-    var phoneRegex = /^[0-9]{10}$/;
-    return phoneRegex.test(phoneValue)
-}
-
-

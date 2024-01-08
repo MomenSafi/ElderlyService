@@ -75,6 +75,7 @@ namespace ElderlyService.Controllers
             {
                 user.RoleId = "2";
                 user.userId = Guid.NewGuid().ToString();
+                user.IsCaregiver = true;
                 _db.Users.Add(user);
                 _db.SaveChanges();
 

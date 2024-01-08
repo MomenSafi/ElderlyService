@@ -1,4 +1,4 @@
-﻿@model Caregiver
+﻿@model Users
 @{
     ViewData["Title"] = "Profile";
 }
@@ -38,58 +38,6 @@
             text-align: center;
         }
 
-        div.stars {
-            width: 270px;
-            display: inline-block;
-        }
-
-        input.star {
-            display: none;
-        }
-
-
-
-        label.star {
-            float: right;
-            padding: 10px;
-            font-size: 36px;
-            color: #4A148C;
-            transition: all .2s;
-        }
-
-
-
-        input.star:checked ~ label.star:before {
-            content: '\f005';
-            color: #FD4;
-            transition: all .25s;
-        }
-
-
-        input.star-5:checked ~ label.star:before {
-            color: #FE7;
-            text-shadow: 0 0 20px #952;
-        }
-
-
-
-        input.star-1:checked ~ label.star:before {
-            color: #F62;
-        }
-
-
-
-        label.star:hover {
-            transform: rotate(-15deg) scale(1.3);
-        }
-
-
-
-        label.star:before {
-            content: '\f006';
-            font-family: FontAwesome;
-        }
-
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" >
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" > </script >
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" > </script >
@@ -103,27 +51,23 @@
         <div class="auto-container">
         </div>
     </div>
-    <form class="container" asp-controller="Caregiver" asp-action="EditProfile" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
+    <form class="container" asp-controller="User" asp-action="EditProfile" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
         <div class="row gutters" style="margin-top:10px">
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-                <input asp-for="@Model.CaregiverId" hidden />
                 <input asp-for="@Model.userId" hidden />
-                <input asp-for="@Model.Users.userId" hidden />
-                <input asp-for="@Model.ServiceId" hidden />
-                <input asp-for="@Model.Service.ServiceId" hidden />
                 <div class="card h-100">
                     <div class="card-body">
                         <div class="account-settings">
                             <div class="user-profile">
                                 <div class="user-avatar">
-                                    <img src="@Url.Content(Model.Users.ImageUrl)" alt="" />
+                                    <img src="@Url.Content(Model.ImageUrl)" alt="" />
 
                                     <label style="border-radius:1px; margin-top:8px" class="btn btn-primary">
                                         Change Photo
-                                        <input asp-for="@Model.Users.ImageFile" type="file" value="@Model.Users.ImageUrl" class="form-control shadow-sm" id="exampleInput" placeholder="Enter something..." style="display: none;">
+                                        <input asp-for="@Model.ImageFile" type="file" value="@Model.ImageUrl" class="form-control shadow-sm" id="exampleInput" placeholder="Enter something..." style="display: none;">
                                     </label>
                                 </div>
-                                <h5 class="user-name">@Model.Users.FirstName @Model.Users.LastName</h5>
+                                <h5 class="user-name">@Model.FirstName @Model.LastName</h5>
                                 <h6 class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f262a34361f123e27283a3333713c3032">@Model.Users.Email</a></h6>
                             </div>
                         </div>
@@ -139,29 +83,29 @@
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label asp-for="Users.FirstName">First Name</label>
-                                    <input asp-for="Users.FirstName" type="text" class="form-control" id="fName" placeholder="Enter first name">
+                                    <label asp-for="FirstName">First Name</label>
+                                    <input asp-for="FirstName" type="text" class="form-control" id="fName" placeholder="Enter first name">
                                     <span id="nameError" class="error-message"></span>
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label asp-for="Users.LastName">Last Name</label>
-                                    <input asp-for="Users.LastName" type="text" class="form-control" id="lName" placeholder="Enter last name">
+                                    <label asp-for="LastName">Last Name</label>
+                                    <input asp-for="LastName" type="text" class="form-control" id="lName" placeholder="Enter last name">
                                     <span id="nameError" class="error-message"></span>
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label asp-for="Users.Email">Email</label>
-                                    <input asp-for="Users.Email" type="email" class="form-control" id="Email" placeholder="Enter email ID">
+                                    <label asp-for="Email">Email</label>
+                                    <input asp-for="Email" type="email" class="form-control" id="Email" placeholder="Enter email ID">
                                     <span id="emailError" class="error-message"></span>
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label asp-for="Users.Phone">Phone</label>
-                                    <input asp-for="Users.Phone" type="text" class="form-control" id="Phone" placeholder="Enter phone number">
+                                    <label asp-for="Phone">Phone</label>
+                                    <input asp-for="Phone" type="text" class="form-control" id="Phone" placeholder="Enter phone number">
                                     <span id="phoneError" class="error-message"></span>
                                 </div>
                             </div>
@@ -169,43 +113,23 @@
                         <div class="row gutters">
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label asp-for="Users.City">City</label>
-                                    <input asp-for="Users.City" type="text" class="form-control" id="City" required placeholder="Enter City">
+                                    <label asp-for="City">City</label>
+                                    <input asp-for="City" type="text" class="form-control" id="City" required placeholder="Enter City">
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label asp-for="Users.DateOfBirth">Date of birth</label>
-                                    <input asp-for="Users.DateOfBirth" type="date" class="form-control" id="date">
+                                    <label asp-for="DateOfBirth">Date of birth</label>
+                                    <input asp-for="DateOfBirth" type="date" class="form-control" id="date">
                                     <span id="dateError" class="error-message"></span>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label asp-for="PriceOfService">Price of service</label>
-                                    <input asp-for="PriceOfService" type="number" class="form-control" id="PriceOfService" placeholder="price / hr">
-                                    <span id="PriceOfServiceError" class="error-message"></span>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label asp-for="Service.Name">Service Name</label>
-                                    <select asp-for="Service.ServiceId" asp-items="@(ViewBag.Services)" class="form-control" required id="Service"></select>
-                                </div>
-
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label asp-for="AboutYou">About You</label>
-                                    <textarea asp-for="AboutYou" cols="30" rows="7" type="text" class="form-control" id="AboutYou"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="row gutters">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="text-right">
-                                    <a asp-controller="User" asp-action="CaregiverProfile" name="submit" style="border-radius:1px" class="btn btn-secondary">Cancel</a>
-                                    <button asp-controller="Caregiver" asp-action="EditProfile" type="submit" id="submit" style="border-radius:1px" name="submit" class="btn btn-primary">Update</button>
+                                    <a asp-controller="User" asp-action="UserProfile" name="submit" style="border-radius:1px" class="btn btn-secondary">Cancel</a>
+                                    <button asp-controller="User" asp-action="EditProfile" type="submit" id="submit" style="border-radius:1px" name="submit" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
                         </div>
