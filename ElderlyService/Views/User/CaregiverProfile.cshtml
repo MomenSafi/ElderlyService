@@ -97,6 +97,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href="~/profile.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
     <div class="auto-container">
@@ -108,7 +109,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
-                    <img src="@Model.Users.ImageUrl" alt="" />
+                    <img src="@Url.Content(Model.Users.ImageUrl)" alt="" />
                 </div>
             </div>
             <div class="col-md-6">
@@ -248,22 +249,26 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var obj in Model.AvilableForThisWeek)
+                                            @{
+                                                int count = 1;
+                                            }
+                                            @foreach (var obj in Model.Availabilities.OrderBy(a => a.DayOfWeek))
                                             {
                                                 <tr>
-                                                    <th scope="row">1</th>
+                                                    <th scope="row">@count</th>
                                                     <td>@obj.DayOfWeek</td>
-                                                    <td>@obj.StartTime</td>
-                                                    <td>@obj.EndTime</td>
+                                                    <td>@obj.StartTime.TimeOfDay</td>
+                                                    <td>@obj.EndTime.TimeOfDay</td>
                                                     <td>
-                                                        <a asp-controller="Caregiver" asp-action="EditAvailable" asp-route-id="@obj.AvilableForThisWeekID" class="btn btn-primary mx-2">
+                                                        <a asp-controller="Caregiver" asp-action="EditAvailable" asp-route-id="@obj.AvailabilityID" class="btn btn-primary mx-2">
                                                             <i class="bi bi-pencil-square"></i> Edit
                                                         </a>
-                                                        <a data-id="@obj.AvilableForThisWeekID" class="btn btn-danger mx-2">
-                                                            <i class="bi bi-trash-fill DeleteAvailable"></i> Delete
+                                                        <a data-id="@obj.AvailabilityID" class="btn btn-danger mx-2 DeleteAvailable">
+                                                            <i class="bi bi-trash-fill"></i> Delete
                                                         </a>
                                                     </td>
                                                 </tr>
+                                                count++;
                                             }
                                         </tbody>
                                     </table>
@@ -290,22 +295,26 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @{
+                                                count = 1;
+                                            }
                                             @foreach (var obj in Model.Experiences.OrderBy(e => e.EndDate))
                                             {
                                                 <tr>
-                                                    <th scope="row">1</th>
+                                                    <th scope="row">@count</th>
                                                     <td>@obj.placeOfExperience</td>
-                                                    <td>@obj.StartDate</td>
-                                                    <td>@obj.EndDate</td>
+                                                    <td>@obj.StartDate.Date.ToString("yyyy-MM")</td>
+                                                    <td>@obj.EndDate.Date.ToString("yyyy-MM")</td>
                                                     <td>
                                                         <a asp-controller="Caregiver" asp-action="EditExperiences" asp-route-id="@obj.ExperienceId" class="btn btn-primary mx-2">
                                                             <i class="bi bi-pencil-square"></i> Edit
                                                         </a>
-                                                        <a data-id="@obj.ExperienceId" class="btn btn-danger mx-2">
-                                                            <i class="bi bi-trash-fill DeleteExperiences"></i> Delete
+                                                        <a data-id="@obj.ExperienceId" class="btn btn-danger mx-2 DeleteExperiences">
+                                                            <i class="bi bi-trash-fill"></i> Delete
                                                         </a>
                                                     </td>
                                                 </tr>
+                                                count++;
                                             }
                                         </tbody>
                                     </table>
@@ -348,10 +357,12 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $('.DeleteAvailable').on('click', function () {
         var id = $(this).data('id');
+        console.log(id);
+        console.log('DeleteAvailable ID:', id);
 
         Swal.fire({
             title: 'Are you sure?',
@@ -371,6 +382,8 @@
 
     $('.DeleteExperiences').on('click', function () {
         var id = $(this).data('id');
+        console.log(id);
+        console.log('DeleteExperiences ID:', id);
 
         Swal.fire({
             title: 'Are you sure?',
@@ -387,4 +400,4 @@
             }
         });
     });
-</script>>
+</script>

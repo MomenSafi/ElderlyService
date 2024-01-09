@@ -14,7 +14,7 @@ namespace ElderlyService.Controllers
             _db = db;
             this.webHostEnvironment = webHostEnvironment;
         }
-        public IActionResult Index()
+        public IActionResult Dashboard()
         {
             return View();
         }
@@ -34,6 +34,17 @@ namespace ElderlyService.Controllers
         [HttpPost]
         public IActionResult AddService(Service service)
         {
+            if (service.ImageFile != null)
+            {
+                string wwwRootPath = webHostEnvironment.WebRootPath;
+                string fileName = Guid.NewGuid().ToString() + "" + service.ImageFile.FileName;
+                string path = Path.Combine(wwwRootPath + "/Image/", fileName);
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    service.ImageFile.CopyTo(fileStream);
+                }
+                service.ImageUrl = "/Image/" + fileName;
+            }
             _db.services.Add(service);
             _db.SaveChanges();
             TempData["success"] = "Service Added Successfully";
@@ -48,10 +59,32 @@ namespace ElderlyService.Controllers
         [HttpPost]
         public IActionResult EditService(Service service)
         {
+            if (service.ImageFile != null)
+            {
+                string wwwRootPath = webHostEnvironment.WebRootPath;
+                string fileName = Guid.NewGuid().ToString() + "" + service.ImageFile.FileName;
+                string path = Path.Combine(wwwRootPath + "/Image/", fileName);
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    service.ImageFile.CopyTo(fileStream);
+                }
+                service.ImageUrl = "/Image/" + fileName;
+            }
             _db.services.Update(service);
             _db.SaveChanges();
             TempData["success"] = "Service Updated Successfully";
             return RedirectToAction("Service");
+        }
+        [HttpPost]
+        public IActionResult Service(string SearchItem)
+        {
+            if (!string.IsNullOrEmpty(SearchItem))
+            {
+                List<Service> Search = _db.services.Where(u => u.Name.Contains(SearchItem)).ToList();
+                return View(Search);
+            }
+            var service = _db.services.ToList();
+            return View(service);
         }
         ////////////////////////////////////////
         // users
@@ -59,6 +92,19 @@ namespace ElderlyService.Controllers
         {
             var users = _db.Users
                 .Where(u=>u.RoleId == "3")
+                .ToList();
+            return View(users);
+        }
+        [HttpPost]
+        public IActionResult Users(string SearchItem)
+        {
+            if(string.IsNullOrEmpty(SearchItem))
+            {
+                List<Users> Search = _db.Users.Where(u=>u.FirstName.Contains(SearchItem) || u.LastName.Contains(SearchItem)).ToList();
+                return View(Search);
+            }
+            var users = _db.Users
+                .Where(u => u.RoleId == "3")
                 .ToList();
             return View(users);
         }
@@ -71,6 +117,26 @@ namespace ElderlyService.Controllers
             var Caregivers = _db.Caregivers
                 .Include(c=>c.Users)
                 .Where(c=>c.Users.RoleId == "2")
+                .Include(c=>c.Service)
+                .ToList();
+            return View(Caregivers);
+        }
+        [HttpPost]
+        public IActionResult Caregiver(string SearchItem)
+        {
+            if (string.IsNullOrEmpty(SearchItem))
+            {
+                List<Caregiver> Search = _db.Caregivers.Where(c => c.Users.FirstName.Contains(SearchItem) || c.Users.LastName.Contains(SearchItem))
+                    .Include(c=>c.Users)
+                    .Where(c=>c.Users.RoleId =="2")
+                    .Include (c=>c.Service)
+                    .ToList();
+                return View(Search);
+            }
+            var Caregivers = _db.Caregivers
+                .Include(c => c.Users)
+                .Where(c => c.Users.RoleId == "2")
+                .Include(c => c.Service)
                 .ToList();
             return View(Caregivers);
         }
@@ -83,7 +149,7 @@ namespace ElderlyService.Controllers
                 .Include(r=>r.Caregiver)
                 .Where(r=>r.status == Reviews.Status.pending)
                 .ToList();
-            return View();
+            return View(reviews);
         }
         public IActionResult ShowOrDelReview(int? id, bool status)
         {
@@ -108,7 +174,7 @@ namespace ElderlyService.Controllers
                 .Include(r => r.Users)
                 .Where(r => r.status == ReviewsForWebsites.Status.pending)
                 .ToList();
-            return View();
+            return View(reviews);
         }
         public IActionResult ShowOrDelTestimonials(int? id, bool status)
         {
@@ -123,7 +189,73 @@ namespace ElderlyService.Controllers
                 review.status = ReviewsForWebsites.Status.Rejected;
                 TempData["success"] = "Testimonials deleted to Elderly Successfully";
             }
-            return View();
+            _db.SaveChanges();
+            return RedirectToAction("Testimonials");
+        }
+
+        public IActionResult Payment()
+        {
+            var payments = _db.Payments
+                .Include(p=>p.Caregiver)
+                .ThenInclude(c=>c.Users)
+                .Where(p=>p.status == Models.Payment.Status.pending).ToList();
+            return View(payments);
+        }
+
+        public IActionResult ActiveOrRejectCaregiver(int? id, bool status)
+        {
+            var payment = _db.Payments.Find(id);
+            if(status)
+            {
+                payment.status = Models.Payment.Status.Approved;
+                var caregiver = _db.Caregivers.SingleOrDefault(c => c.CaregiverId == payment.CaregiverId);
+                if(payment.Amount == 10)
+                {
+                    if (caregiver.Valid == false)
+                    {
+                        caregiver.EndSubscribe = DateTime.Now.AddMonths(1);
+                    }
+                    else
+                    {
+                        caregiver.EndSubscribe = caregiver.EndSubscribe.Value.AddMonths(1);
+                    }
+                }
+                else if(payment.Amount == 20)
+                {
+                    if (caregiver.Valid == false)
+                    {
+                        caregiver.EndSubscribe = DateTime.Now.AddMonths(2);
+                    }
+                    else 
+                    {
+                        caregiver.EndSubscribe = caregiver.EndSubscribe.Value.AddMonths(2);
+                    }
+                }
+                else
+                {
+                    if (caregiver.Valid == false)
+                    {
+                        caregiver.EndSubscribe = DateTime.Now.AddMonths(3);
+                    }
+                    else
+                    {
+                        caregiver.EndSubscribe = caregiver.EndSubscribe.Value.AddMonths(3);
+                    }
+                }
+                caregiver.Valid = true;
+                TempData["success"] = "payment accepted";
+                _db.Payments.Update(payment);
+                _db.Caregivers.Update(caregiver);
+                _db.SaveChanges();
+                return RedirectToAction("Payment");
+            }
+            else
+            {
+                payment.status = Models.Payment.Status.Rejected;
+                _db.SaveChanges();
+                TempData["success"] = "Payment rejected";
+                return RedirectToAction("Payment");
+            }
         }
     }
 }

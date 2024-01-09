@@ -1,0 +1,102 @@
+﻿@model List<Reviews>
+@{
+    Layout = "_LayoutForAdmin";
+}
+@{
+    ViewData["Title"] = "Reviews";
+}
+
+
+<div class="container">
+
+    <div class="row pt-4 pb-3">
+        <div class="col-6">
+            <h2 class="text-primary"> Reviews</h2>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Caregiver Name</th>
+                    <th scope="col">Rate</th>
+                    <th scope="col">Comment</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int count = 1;
+                }
+                @foreach (var obj in Model.OrderBy(r=>r.DateTime))
+                {
+                    <tr>
+                        <th scope="row">@count</th>
+                        <td>@obj.Users.FirstName @obj.Users.LastName</td>
+                        <td>@obj.Caregiver.Users.FirstName @obj.Caregiver.Users.LastName</td>
+                        <td>@obj.Rate</td>
+                        <td>@obj.Comment</td>
+                        <td>@obj.status</td>
+                        <td>@obj.DateTime</td>
+                        <td>
+                            <a data-id="@obj.ReviewID" class="btn btn-primary mx-2">
+                                <i class="bi bi-pencil-square Approve"></i> Approve
+                            </a>
+                            <a data-id="@obj.ReviewID" class="btn btn-danger mx-2">
+                                <i class="bi bi-trash-fill Reject"></i> Reject
+                            </a>
+                        </td>
+                    </tr>
+                    count++;
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $('.Approve').on('click', function () {
+        var id = $(this).data('id');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, Accept it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // User clicked Yes, handle the deletion here
+                window.location.href = '@Url.Action("ShowOrDelReview", "Admin")' + '?id=' + id + '&status=true';
+            }
+        });
+    });
+
+    $('.Reject').on('click', function () {
+        var id = $(this).data('id');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // User clicked Yes, handle the deletion here
+                window.location.href = '@Url.Action("ShowOrDelReview", "Admin")' + '?id=' + id + '&status=false';
+            }
+        });
+    });
+</script>

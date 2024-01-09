@@ -31,10 +31,6 @@ namespace ElderlyService.Models
         public ICollection<AvilableForThisWeek> AvilableForThisWeek { get; set; }
         [ForeignKey("CaregiverId")]
         public ICollection<Payment> payments { get; set; }
-        [ForeignKey("CaregiverId")]
-        public ICollection<CardData> CardDatas { get; set; }
-
-
 
     }
 }

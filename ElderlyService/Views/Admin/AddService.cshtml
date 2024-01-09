@@ -1,0 +1,99 @@
+﻿@model Service
+@{
+    ViewData["Title"] = "Service";
+}
+@{
+    Layout = "_LayoutForAdmin";
+}
+<header>
+
+    <style>
+        .editimg {
+            position: relative;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: right center;
+            height: 60vh;
+            min-height: 40vh;
+            display: flex;
+            align-items: center
+        }
+
+            .editimg:before {
+                background-image: linear-gradient(to left, rgba(77,39,63,0) 0%, #463b46 100%) !important;
+            }
+
+        .auto-container {
+            position: relative;
+            max-width: 1210px;
+            padding: 0px 20px;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: relative !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            line-height: 1.2em !important;
+            margin-bottom: 10px !important;
+            font-size: 62px !important;
+            text-transform: capitalize !important;
+            text-align: center;
+
+        }
+
+        .form-control{
+            background-color: white !important;
+        }
+
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" >
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" > </script >
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" > </script >
+        <link href="~/profile.css" rel="stylesheet" / >
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" / >
+        <link href="~/editprofile/editprofile.css" rel="stylesheet" / >
+    </style>
+</header>
+<body>
+    <form method="post" enctype="multipart/form-data">
+
+        <div class="border shadow-lg m-4 p-3">
+
+            <div class="row pb-2">
+                <h2 class="text-primary">Add Service</h2>
+                <hr />
+            </div>
+
+            <div class="row pb-2">
+                <div class="col-6">
+                    <label asp-for="Name" class="mb-1"></label>
+                    <input asp-for="Name" type="text" class="form-control shadow-sm" id="exampleInput" placeholder="Enter something...">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="col-6">
+                    <label asp-for="ImageFile" class="form-label">Category Image</label>
+                    <input asp-for="ImageFile" type="file" class="form-control" accept="image/*"/>
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+                <div class="col-6">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" type="text" class="form-control" required></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary m-2">Add Service</button>
+
+            <a asp-action="Service" class="btn btn-primary" >Back</a>
+
+
+        </div>
+    </form>
+
+    @section Scripts {
+        @{
+            <partial name="_ValidationScriptsPartial" />
+        }
+    }
+
+</body>

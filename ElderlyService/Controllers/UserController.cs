@@ -30,7 +30,9 @@ namespace ElderlyService.Controllers
             ServiceAndTestimonials serviceAndTestimonials = new ServiceAndTestimonials
             {
                 Services = _db.services.ToList(),
-                ReviewsForWebsitess = _db.reviewsForWebsites.Where(s => s.status == ReviewsForWebsites.Status.Approved).ToList()
+                ReviewsForWebsitess = _db.reviewsForWebsites
+                .Include(t=>t.Users)
+                .Where(s => s.status == ReviewsForWebsites.Status.Approved).ToList()
             };
 
             ViewBag.ProfessionalCaregiver = _db.Caregivers.Count(v => v.Valid == true);
@@ -89,7 +91,9 @@ namespace ElderlyService.Controllers
 
         public IActionResult Testimonials()
         {
-            var testimonials = _db.reviewsForWebsites.ToList();
+            var testimonials = _db.reviewsForWebsites
+                .Include(t=>t.Users)
+                .Where(t=>t.status == ReviewsForWebsites.Status.Approved).ToList();
             return View(testimonials);
         }
 
@@ -185,7 +189,7 @@ namespace ElderlyService.Controllers
                .Include(c => c.Reviews)
                .Include(c => c.Service)
                .Include(c => c.Experiences)
-               .Include(c => c.AvilableForThisWeek)
+               .Include(c => c.Availabilities)
                .Include(c=>c.Appointments)
                 .FirstOrDefault(c => c.Users.userId == user.userId);
             return View(caregiver);
@@ -195,7 +199,11 @@ namespace ElderlyService.Controllers
         {
             string? userJson = HttpContext.Session.GetString("LiveUser");
             var user = JsonConvert.DeserializeObject<Users>(userJson);
-            return View(user);
+            var us = _db.Users
+                .Include(u => u.Appointments)
+                .SingleOrDefault(u => u.userId == user.userId);
+
+            return View(us);
         }
 
         public IActionResult EditProfile(string id)
@@ -219,6 +227,10 @@ namespace ElderlyService.Controllers
                 }
                 user.ImageUrl = "/Image/" + fileName;
             }
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            var thisuser = JsonConvert.DeserializeObject<Users>(userJson);
+            user.Password = thisuser.Password;
+            user.RoleId = thisuser.RoleId;
             _db.Users.Update(user);
             _db.SaveChanges();
             return RedirectToAction("UserProfile", "User");

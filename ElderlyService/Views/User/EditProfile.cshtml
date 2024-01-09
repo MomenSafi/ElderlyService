@@ -55,6 +55,9 @@
         <div class="row gutters" style="margin-top:10px">
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
                 <input asp-for="@Model.userId" hidden />
+                <input asp-for="@Model.Password" hidden />
+                <input asp-for="@Model.RoleId" hidden />
+
                 <div class="card h-100">
                     <div class="card-body">
                         <div class="account-settings">
@@ -68,7 +71,7 @@
                                     </label>
                                 </div>
                                 <h5 class="user-name">@Model.FirstName @Model.LastName</h5>
-                                <h6 class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f262a34361f123e27283a3333713c3032">@Model.Users.Email</a></h6>
+                                <h6 class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f262a34361f123e27283a3333713c3032">@Model.Email</a></h6>
                             </div>
                         </div>
                     </div>

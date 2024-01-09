@@ -1,0 +1,77 @@
+﻿@model List<Caregiver>
+@{
+    Layout = "_LayoutForAdmin";
+}
+@{
+    ViewData["Title"] = "Caregiver";
+}
+
+<div class="container">
+
+    <div class="row pt-4 pb-3">
+        <div class="col-6">
+            <h2 class="text-primary"> Caregiver</h2>
+        </div>
+        <div class="col-6 text-end">
+
+
+            <div class="input-group">
+                <form method="post">
+                    <div class="input-group">
+                        <input name="SearchItem" type="search" class="form-control rounded m-1" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                        <button asp-action="Caregiver" type="submit" class="btn btn-outline-primary m-1" data-mdb-ripple-init>search</button>
+                    </div>
+                </form>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Date Of birth</th>
+                    <th scope="col">Price of Service</th>
+                    <th scope="col">End Subscribe</th>
+                    <th scope="col">Service Name</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int count = 1;
+                }
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <th scope="row">@count</th>
+                        <td>@obj.Users.FirstName @obj.Users.LastName</td>
+                        <td>@obj.Users.Email</td>
+                        <td>@obj.Users.Phone</td>
+                        <td>@obj.Users.City</td>
+                        <td>@obj.Users.DateOfBirth</td>
+                        <td>@obj.PriceOfService</td>
+                        <td>@obj.EndSubscribe</td>
+                        @{
+                            var name = obj.Service?.Name ?? "No Service";
+                        }
+                        <td>
+                            @name
+                        </td>
+
+                    </tr>
+                    count++;
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

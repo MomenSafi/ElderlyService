@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
 
 namespace ElderlyService.Controllers
 {
@@ -31,7 +33,7 @@ namespace ElderlyService.Controllers
             return View(cargegiver);
         }
         [HttpPost]
-        public IActionResult EditProfile([FromForm] Caregiver caregiver)
+        public IActionResult EditProfile([FromForm] Caregiver caregiver, int id)
         {
             if (caregiver.Users.ImageFile != null)
             {
@@ -44,9 +46,18 @@ namespace ElderlyService.Controllers
                 }
                 caregiver.Users.ImageUrl = "/Image/" + fileName;
             }
+            caregiver.ServiceId = id;
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            user.FirstName = caregiver.Users.FirstName;
+            user.LastName = caregiver.Users.LastName;
+            user.Email = caregiver.Users.Email;
+            user.Phone = caregiver.Users.Phone;
+            user.City = caregiver.Users.City;
+            user.DateOfBirth = caregiver.Users.DateOfBirth;
+            _db.Users.Update(user);
             _db.Caregivers.Update(caregiver);
-            _db.Users.Update(caregiver.Users);
-            _db.services.Update(caregiver.Service);
+
             _db.SaveChanges();
             return RedirectToAction("CaregiverProfile", "User");
         }
@@ -86,34 +97,68 @@ namespace ElderlyService.Controllers
         public IActionResult EditAvailable(Availability obj)
         {
             _db.Availabilities.Update(obj);
-            var avaThisWeek = new AvilableForThisWeek
-            {
-                DayOfWeek = (AvilableForThisWeek.Days)obj.DayOfWeek,
-                StartTime = obj.StartTime,
-                EndTime = obj.EndTime,
-                CaregiverId = obj.CaregiverId,
-            };
-            _db.AvilableForThisWeek.Update(avaThisWeek);
+            var existingAvailability = _db.AvilableForThisWeek
+                .Where(a => a.CaregiverId == obj.CaregiverId)
+                .ToList();
+
+            _db.AvilableForThisWeek.RemoveRange(existingAvailability);
+
             _db.SaveChanges();
+            var newAvailableForThisWeek = _db.Availabilities.Where(c => c.CaregiverId == obj.CaregiverId).ToList();
+
+            foreach (var item in newAvailableForThisWeek)
+            {
+                var newAvailability = new AvilableForThisWeek
+                {
+                    DayOfWeek = (AvilableForThisWeek.Days)item.DayOfWeek,
+                    StartTime = item.StartTime,
+                    EndTime = item.EndTime,
+                    CaregiverId = item.CaregiverId,
+                };
+
+                _db.AvilableForThisWeek.Add(newAvailability);
+            }
+
+            // Save changes to the database
+            _db.SaveChanges();
+
             TempData["success"] = "Available time updated successfully";
             return RedirectToAction("CaregiverProfile", "User");
-
         }
-        [HttpPost]
+    
+       
         public IActionResult DeleteAvailable(int id)
         {
             Availability? obj = _db.Availabilities.Find(id);
-            var avaThisWeek = new AvilableForThisWeek
-            {
-                DayOfWeek = (AvilableForThisWeek.Days)obj.DayOfWeek,
-                StartTime = obj.StartTime,
-                EndTime = obj.EndTime,
-                CaregiverId = obj.CaregiverId,
-            };
+
             _db.Availabilities.Remove(obj);
-            _db.AvilableForThisWeek.Remove(avaThisWeek);
+
+            var existingAvailability = _db.AvilableForThisWeek
+                .Where(a => a.CaregiverId == obj.CaregiverId)
+                .ToList();
+
+            _db.AvilableForThisWeek.RemoveRange(existingAvailability);
+
             _db.SaveChanges();
-            TempData["success"] = "Available time deleted successfully";
+            var newAvailableForThisWeek = _db.Availabilities.Where(c=>c.CaregiverId ==obj.CaregiverId).ToList();
+
+            foreach (var item in newAvailableForThisWeek)
+            {
+                var newAvailability = new AvilableForThisWeek
+                {
+                    DayOfWeek = (AvilableForThisWeek.Days)item.DayOfWeek,
+                    StartTime = item.StartTime,
+                    EndTime = item.EndTime,
+                    CaregiverId = item.CaregiverId,
+                };
+
+                _db.AvilableForThisWeek.Add(newAvailability);
+            }
+
+            // Save changes to the database
+            _db.SaveChanges();
+
+            TempData["success"] = "Available time deleted and refilled successfully";
             return RedirectToAction("CaregiverProfile", "User");
         }
 
@@ -150,15 +195,43 @@ namespace ElderlyService.Controllers
             return RedirectToAction("CaregiverProfile", "User");
 
         }
-        [HttpPost]
+
         public IActionResult DeleteExperiences(int id)
         {
             Experience? obj = _db.Experiences.Find(id);
-            
+
             _db.Experiences.Remove(obj);
             _db.SaveChanges();
             TempData["success"] = "Experience deleted successfully";
             return RedirectToAction("CaregiverProfile", "User");
+        }
+
+        public IActionResult Subscribe(string id)
+        {
+            var caregiver = _db.Caregivers.Find(id);
+            ViewBag.Caregiver = caregiver;
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Subscribe(CardData cardData, int Duration, string id)
+        {
+            var data = _db.Cards.ToList();
+            var payment = new Payment();
+            foreach (var card in data)
+            {
+                if (card.CardId == cardData.CardId && card.password == cardData.password)
+                {
+                    payment.Amount = Duration * 10;
+                    payment.CaregiverId = id;
+                    _db.Payments.Add(payment);
+                    _db.SaveChanges();
+                    TempData["success"] = "Your Payment done successfully";
+                    return RedirectToAction("CaregiverProfile", "User");
+
+                }
+            }
+            TempData["error"] = "Your CardId or Password is wrong";
+            return RedirectToAction("Subscribe", new { id });
         }
     }
 }

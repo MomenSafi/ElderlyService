@@ -7,8 +7,7 @@ namespace ElderlyService.Models
         [Key]
         public string CardId { get; set; }
         public string password { get; set; }
-        public string CaregiverId { get; set; }
-        public Caregiver Caregiver { get; set; }
+       
     }
 
 }

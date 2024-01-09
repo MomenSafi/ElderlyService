@@ -109,8 +109,7 @@
                 <input asp-for="@Model.CaregiverId" hidden />
                 <input asp-for="@Model.userId" hidden />
                 <input asp-for="@Model.Users.userId" hidden />
-                <input asp-for="@Model.ServiceId" hidden />
-                <input asp-for="@Model.Service.ServiceId" hidden />
+                <input asp-for="@Model.Users.Password" hidden/>
                 <div class="card h-100">
                     <div class="card-body">
                         <div class="account-settings">
@@ -190,7 +189,7 @@
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label asp-for="Service.Name">Service Name</label>
-                                    <select asp-for="Service.ServiceId" asp-items="@(ViewBag.Services)" class="form-control" required id="Service"></select>
+                                    <select name="id" asp-for="Service.ServiceId" asp-items="@(ViewBag.Services)" class="form-control" required id="Service"></select>
                                 </div>
 
                             </div>

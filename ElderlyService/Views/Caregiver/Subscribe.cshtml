@@ -1,0 +1,123 @@
+﻿@model CardData
+@{
+    ViewData["Title"] = "payment";
+}
+<header>
+    <link href="~/subscribe/subscribe.css" rel="stylesheet" />
+    <style>
+        .editimg {
+            position: relative;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: right center;
+            height: 60vh;
+            min-height: 40vh;
+            display: flex;
+            align-items: center
+        }
+
+            .editimg:before {
+                background-image: linear-gradient(to left, rgba(77,39,63,0) 0%, #463b46 100%) !important;
+            }
+
+        .auto-container {
+            position: relative;
+            max-width: 1210px;
+            padding: 0px 20px;
+            margin: 0 auto;
+        }
+
+        .header {
+            position: relative !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            line-height: 1.2em !important;
+            margin-bottom: 10px !important;
+            font-size: 62px !important;
+            text-transform: capitalize !important;
+            text-align: center;
+        }
+
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" >
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" > </script >
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" > </script >
+        <link href="~/profile.css" rel="stylesheet" / >
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" / >
+        <link href="~/editprofile/editprofile.css" rel="stylesheet" / >
+    </style>
+</header>
+<body>
+    <div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
+        <div class="auto-container">
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 mx-auto my-5">
+                
+                <div class="p-4 shadow bg-white position-relative" id="formWrap">
+                    <div class="p-5"></div>
+                    <form method="post">
+                        <input name="id" hidden value="@ViewBag.Caregiver.CaregiverId" />
+                        <div class="form-floating">
+                            <label asp-for="CardId">Card Number</label>
+                            <input asp-for="CardId" type="text" class="form-control" id="cardNumber">
+                            
+                        </div>
+                        <div class="form-floating mt-4">
+                            <label asp-for="password">Password</label>
+                            <input asp-for="password" type="password" class="form-control" id="cardName">
+                            
+                        </div>
+                        <div class="form-floating mt-4">
+                            <label name="Duration">Duration</label>
+                            <select style="width:100%" class="form-select" name="Duration">
+                                <option id="1" value="1">1 Month</option>
+                                <option id="2" value="2">2 Month</option>
+                                <option id="3" value="3">3 Month</option>
+                            </select>
+
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-primary w-100" type="submit">
+                                Pay Now  <span id="price"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/subscribe/subscribe.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Initial price
+            updatePrice();
+
+            // Handle select change
+            $('select[name="Duration"]').on('change', function () {
+                updatePrice();
+            });
+
+            // Function to update the price based on the selected months
+            function updatePrice() {
+                var selectedMonths = parseInt($('select[name="Duration"]').val());
+
+                // Debugging statements
+                console.log("Selected months:", selectedMonths);
+
+                if (isNaN(selectedMonths)) {
+                    console.error("Invalid value for months:", $('select[name="Duration"]').val());
+                    selectedMonths = 0; // Default to 0 if parsing fails
+                }
+
+                var price = selectedMonths * 10; // Assuming $10 per month
+
+                $('#price').text('$' + price);
+            }
+        });
+    </script>
+
+
+
+</body>

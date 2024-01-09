@@ -32,6 +32,8 @@ namespace ElderlyService.Controllers
                     {
                         string userJson = JsonConvert.SerializeObject(u);
                         HttpContext.Session.SetString("LiveUser", userJson);
+                        if (u.RoleId == "1")
+                            return RedirectToAction("Dashboard", "Admin");
 
                         return RedirectToAction("Index", "User");
                     }
