@@ -14,6 +14,12 @@ namespace ElderlyService.Models
             Thursday,
             Friday
         }
+        public enum Status
+        {
+            pending,
+            Approved,
+            Rejected
+        }
         [Key]
         [Required]
         public int AppointmentId { get; set; }
@@ -22,7 +28,7 @@ namespace ElderlyService.Models
         public DateTime StartTime { get; set; }
         [Required]
         public DateTime EndTime { get; set;}
-        public int status { get; set; }
+        public Status status { get; set; }
         [Required]
         public DateTime BookingDate { get; set; }
         public Days DayOfWeek { get; set; }

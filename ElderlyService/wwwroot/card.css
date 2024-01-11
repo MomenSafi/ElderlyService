@@ -22,9 +22,6 @@ body {
 }
 
 
-.lighttt {
-    background: #f3f5f7;
-}
 
 a, a:hover {
     text-decoration: none;
@@ -54,9 +51,6 @@ a, a:hover {
     background-color: #18151f;
 }
 
-&.lighttt {
-    background-color: #e1e5ea;
-}
 
 .t-dark {
     color: #18151f;

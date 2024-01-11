@@ -33,7 +33,7 @@ namespace ElderlyService.Controllers
             return View(cargegiver);
         }
         [HttpPost]
-        public IActionResult EditProfile([FromForm] Caregiver caregiver, int id)
+        public IActionResult EditProfile([FromForm] Caregiver caregiver)
         {
             if (caregiver.Users.ImageFile != null)
             {
@@ -46,22 +46,52 @@ namespace ElderlyService.Controllers
                 }
                 caregiver.Users.ImageUrl = "/Image/" + fileName;
             }
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            caregiver.Users.Password = user.Password;
+            caregiver.Users.RoleId = user.RoleId;
+            _db.Users.Update(caregiver.Users);
+            _db.SaveChanges();
+            caregiver.Users.ImageFile = null;
+            HttpContext.Session.SetString("LiveUser", JsonConvert.SerializeObject(caregiver.Users));
+            return RedirectToAction("CEditProfile", "Caregiver", new {id = caregiver.CaregiverId});
+        }
+
+        public IActionResult CEditProfile(string id)
+        {
+            var cargegiver = _db.Caregivers
+               .Include(c => c.Service)
+               .Include(c=>c.Users)
+                   .AsNoTracking()
+
+                .FirstOrDefault(c => c.CaregiverId == id);
+
+            var services = _db.services.ToList();
+
+            ViewBag.Services = new SelectList(services, "ServiceId", "Name");
+
+            return View(cargegiver);
+        }
+        [HttpPost]
+        public IActionResult CEditProfile([FromForm] Caregiver caregiver,int id)
+        {
+
             caregiver.ServiceId = id;
             string? userJson = HttpContext.Session.GetString("LiveUser");
             var user = JsonConvert.DeserializeObject<Users>(userJson);
-            user.FirstName = caregiver.Users.FirstName;
-            user.LastName = caregiver.Users.LastName;
-            user.Email = caregiver.Users.Email;
-            user.Phone = caregiver.Users.Phone;
-            user.City = caregiver.Users.City;
-            user.DateOfBirth = caregiver.Users.DateOfBirth;
-            _db.Users.Update(user);
+            caregiver.Users.Password = user.Password;
+            caregiver.Users.RoleId= user.RoleId;
+            caregiver.Users.Email = user.Email;
+            caregiver.Users.FirstName = user.FirstName;
+            caregiver.Users.LastName = user.LastName;
+            caregiver.Users.Phone = user.Phone;
+            caregiver.Users.City = user.City;
+            caregiver.Users.DateOfBirth = user.DateOfBirth;
+            caregiver.Users.ImageUrl = user.ImageUrl;
             _db.Caregivers.Update(caregiver);
-
             _db.SaveChanges();
             return RedirectToAction("CaregiverProfile", "User");
         }
-
         //     Available
         public IActionResult AddAvailability(string id)
         {
@@ -232,6 +262,23 @@ namespace ElderlyService.Controllers
             }
             TempData["error"] = "Your CardId or Password is wrong";
             return RedirectToAction("Subscribe", new { id });
+        }
+        public IActionResult RejectAppointment(int id)
+        {
+            var appointment = _db.Appointments.Find(id);
+            appointment.status = Appointment.Status.Rejected;
+            _db.Appointments.Update(appointment);
+            TempData["success"] = "this appointment rejected successfully";
+            return RedirectToAction("CaregiverProfile", "User");
+
+        }
+        public IActionResult ApproveAppointment(int id)
+        {
+            var appointment = _db.Appointments.Find(id);
+            appointment.status = Appointment.Status.Approved;
+            _db.Appointments.Update(appointment);
+            TempData["success"] = "this appointment approved successfully";
+            return RedirectToAction("CaregiverProfile", "User");
         }
     }
 }

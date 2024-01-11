@@ -53,9 +53,12 @@
             @foreach (var service in Model)
             {
                 <div class="col-6 col-sm-6 col-md-6 mb-4 mb-lg-0 col-lg-3">
-                    <div class="service">
-                        <a asp-action="Caregiver" asp-route-id="@service.ServiceId" class="d-block"><img src="@service.ImageUrl" alt="Image" class="img-fluid"></a>
-                        <div class="service-inner">
+                    <div class="service equal">
+                        <a style="height: 150px; width: 100%; display: flex; align-items: center; overflow: hidden;" asp-action="Caregiver" asp-route-id="@service.ServiceId" class="d-block">
+                            <img src="@Url.Content(service.ImageUrl)" alt="Image" class="img-fluid" style="object-fit: cover; width: 100%; min-width: 100%; min-height: 100%;">
+                        </a>
+
+                        <div class="service-inner" style="border:none !important">
                             <h3>@service.Name</h3>
                             <p>@service.Description</p>
                         </div>

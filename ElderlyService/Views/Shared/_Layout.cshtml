@@ -87,7 +87,7 @@
 
                                 @{
                                     string liveUser = Context.Session.GetString("LiveUser");
-                                    
+
                                 }
                                 @if (!string.IsNullOrEmpty(liveUser))
                                 {
@@ -123,47 +123,54 @@
         </main>
     </div>
 
+
     <div class="site-footer bg-lighttt">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h2 class="footer-heading mb-4">About</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi cumque tenetur inventore veniam, hic vel ipsa necessitatibus ducimus architecto fugiat!</p>
+                    <p>Our platform connects you with experienced caregivers who
+                        prioritize the well-being and comfort of your loved ones.
+                        With a commitment to excellence, we strive to create a supportive
+                        community that values dignity, respect, and the unique needs
+                        of each individual.
+                    </p>
                     <div class="my-5 social">
-                        <a href="#" class="pl-0 pr-3"><span class="icon-facebook"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-twitter"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-                        <a href="#" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
+                        <a href="https://github.com/MomenSafi/ElderlyService" class="pl-3 pr-3"><span class="icon-github"></span></a>
+                        <a href="https://www.linkedin.com/in/momen-safi/" class="pl-3 pr-3"><span class="icon-linkedin"></span></a>
                     </div>
                 </div>
-                <div class="col-lg-8">
+                <div class="col-lg-6">
                     <div class="row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <h2 class="footer-heading mb-4">Quick Links</h2>
                             <ul class="list-unstyled">
-                                <li><a href="#">Amazing Atmosphere</a></li>
-                                <li><a href="#">Caring Staff</a></li>
-                                <li><a href="#">FAQs</a></li>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Contact Us</a></li>
+                                <li><a asp-controller="User" asp-action="Service">Services</a></li>
+                                <li><a asp-controller="User" asp-action="Caregiver">Caregivers</a></li>
+                                <li><a asp-controller="User" asp-action="About">About Us</a></li>
+                                <li><a asp-controller="User" asp-action="Contact">Contact Us</a></li>
                             </ul>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-6">
                             <h2 class="footer-heading mb-4">Helpful Link</h2>
                             <ul class="list-unstyled">
-                                <li><a href="#">Hospice Care</a></li>
-                                <li><a href="#">Excellent Cuisine</a></li>
-                                <li><a href="#">Privacy</a></li>
-                                <li><a href="#">Terms</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-4">
-                            <h2 class="footer-heading mb-4">Resources</h2>
-                            <ul class="list-unstyled">
-                                <li><a href="#">Health Care</a></li>
-                                <li><a href="#">Elderly Care</a></li>
-                                <li><a href="#">Care with Love</a></li>
-                                <li><a href="#">Quality Care</a></li>
+                                <li><a asp-controller="User" asp-action="Home">Home</a></li>
+                                <li><a asp-controller="User" asp-action="Testimonials">Testimonials</a></li>
+
+                                @if (!string.IsNullOrEmpty(liveUser))
+                                {
+                                    var user = JsonConvert.DeserializeObject<Users>(liveUser);
+                                    <li><a asp-controller="User" asp-action="MyProfile">Profile</a></li>
+                                    <li><a asp-controller="Login" asp-action="Logout">Logout</a></li>
+                                    @if (user.RoleId == "1")
+                                    {
+                                        <li><a asp-controller="Admin" asp-action="Dashboard">Dashboard</a></li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li><a asp-controller="Login" asp-action="Login">Login</a></li>
+                                }
                             </ul>
                         </div>
                     </div>
@@ -184,7 +191,7 @@
             </div>
         </div>
     </div>
- <!-- .site-wrap -->
+    <!-- .site-wrap -->
 
     <script src="~/js/jquery-3.3.1.min.js"></script>
     <script src="~/js/jquery-ui.js"></script>
@@ -202,7 +209,6 @@
 
 
     <script src="~/js/main.js"></script>
-
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

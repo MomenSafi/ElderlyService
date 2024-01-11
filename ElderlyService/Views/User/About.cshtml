@@ -134,7 +134,7 @@
             {
                 <div class="col-lg-3">
                     <div class="team text-center">
-                        <a asp-action="Profile" asp-route-id="@topCaregiver.CaregiverId" class="d-block"><img src="@topCaregiver.Users.ImageUrl" alt="" class="img-fluid"></a>
+                        <a asp-action="Profile" asp-route-id="@topCaregiver.CaregiverId" class="d-block"><img src="@Url.Content(topCaregiver.Users.ImageUrl)" alt="" class="img-fluid"></a>
                         <h3>@topCaregiver.Users.FirstName @topCaregiver.Users.LastName</h3>
                         <span class="position d-block">@topCaregiver.Service.Name</span>
                         <p>@topCaregiver.AboutYou</p>

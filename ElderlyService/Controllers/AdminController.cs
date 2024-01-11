@@ -2,6 +2,7 @@
 using ElderlyService.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ElderlyService.Controllers
 {
@@ -16,7 +17,19 @@ namespace ElderlyService.Controllers
         }
         public IActionResult Dashboard()
         {
-            return View();
+            ViewBag.ProfessionalCaregiver = _db.Caregivers.Count();
+            ViewBag.UserUseWebsite = _db.Users.Count(r => r.RoleId == "3");
+            ViewBag.AppointmentApproved = _db.Appointments.Count(a => a.status == Models.Appointment.Status.Approved);
+            ViewBag.paymentsApprovd = _db.Payments
+                .Where(p=>p.status == Models.Payment.Status.Approved)
+                .Sum(p=>p.Amount);
+
+            var appointment = _db.Appointments
+                .Include(a => a.Users)
+                .Include(a => a.Caregiver)
+                    .ThenInclude(c => c.Users)
+                .ToList();
+            return View(appointment);
         }
          ///////////////////////////////////////////////////////////
          // Service
@@ -147,6 +160,7 @@ namespace ElderlyService.Controllers
             var reviews = _db.Reviews
                 .Include(r=>r.Users)
                 .Include(r=>r.Caregiver)
+                    .ThenInclude(r=>r.Users)
                 .Where(r=>r.status == Reviews.Status.pending)
                 .ToList();
             return View(reviews);
@@ -164,7 +178,9 @@ namespace ElderlyService.Controllers
                 review.status = Reviews.Status.Rejected;
                 TempData["success"] = "Review deleted to Elderly Successfully";
             }
-            return View();
+            _db.Reviews.Update(review);
+            _db.SaveChanges();
+            return RedirectToAction("Review");
         }
         //////////////////////////////////////////
         // Testimonials

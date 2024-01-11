@@ -107,7 +107,7 @@
     <div class="row">
         <div class="col-md-4">
             <div class="profile-img">
-                <img src="@Url.Content(Model.Users.ImageUrl)" alt="" />
+                <img src="@Url.Content(Model.Users.ImageUrl)" alt="img" />
             </div>
         </div>
         <div class="col-md-6">
@@ -146,6 +146,17 @@
                     </li>
                 </ul>
             </div>
+        </div>
+        <div class="col-md-2">
+            @{
+                string liveUser = Context.Session.GetString("LiveUser");
+            }
+            @if (!string.IsNullOrEmpty(liveUser))
+            {
+                <a asp-controller="User" asp-action="Appointment" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
+                    Appoinment Now
+                </a>
+            }
         </div>
     </div>
     <div class="row">
@@ -191,7 +202,7 @@
                                         @{
                                             int count = 1;
                                         }
-                                        @foreach (var obj in Model.AvilableForThisWeek.OrderBy(q=>q.DayOfWeek))
+                                        @foreach (var obj in Model.AvilableForThisWeek.OrderBy(q => q.DayOfWeek))
                                         {
                                             <tr>
                                                 <th scope="row">@count</th>
@@ -254,7 +265,7 @@
                     <div class="pt-5">
                         <h3 class="mb-5">@Model.Reviews.Count()</h3>
                         <ul class="comment-list">
-                            @foreach (var obj in Model.Reviews.OrderBy(r=>r.DateTime))
+                            @foreach (var obj in Model.Reviews.OrderBy(r => r.DateTime))
                             {
                                 <li class="comment">
                                     <div class="vcard bio">
@@ -264,15 +275,12 @@
                                         <h3>@obj.Users.FirstName @obj.Users.LastName</h3>
                                         <div class="meta">@obj.DateTime</div>
                                         <p>@obj.Comment</p>
-                                        <p>@obj.Rate<span>@String.Format("{0:F1}", Rank) / 5</span></p>
+                                        <p><span>@String.Format("{0:F1}", Rank) / 5</span></p>
                                     </div>
                                 </li>
                             }
                         </ul>
                         <!-- END comment-list -->
-                        @{
-                            string liveUser = Context.Session.GetString("LiveUser");
-                        }
                         @if (!string.IsNullOrEmpty(liveUser))
                         {
                             var user = JsonConvert.DeserializeObject<Users>(liveUser);

@@ -5,7 +5,9 @@
 @{
     ViewData["Title"] = "Reviews";
 }
-
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
 
 <div class="container">
 
@@ -44,11 +46,11 @@
                         <td>@obj.status</td>
                         <td>@obj.DateTime</td>
                         <td>
-                            <a data-id="@obj.ReviewID" class="btn btn-primary mx-2">
-                                <i class="bi bi-pencil-square Approve"></i> Approve
+                            <a data-id="@obj.ReviewID" class="btn btn-primary mx-2 Approve">
+                                <i class="bi bi-pencil-square"></i> Approve
                             </a>
-                            <a data-id="@obj.ReviewID" class="btn btn-danger mx-2">
-                                <i class="bi bi-trash-fill Reject"></i> Reject
+                            <a data-id="@obj.ReviewID" class="btn btn-danger mx-2 Reject">
+                                <i class="bi bi-trash-fill"></i> Reject
                             </a>
                         </td>
                     </tr>
@@ -60,7 +62,7 @@
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $('.Approve').on('click', function () {
         var id = $(this).data('id');

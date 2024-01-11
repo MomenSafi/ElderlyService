@@ -1,3 +1,4 @@
+using ElderlyService;
 using ElderlyService.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,7 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<BackgroundTaskService>();
 
 var app = builder.Build();
 
@@ -39,5 +41,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=User}/{action=Index}/{id?}");
+
+// Build the application
+var backgroundTaskService = app.Services.GetRequiredService<BackgroundTaskService>();
+backgroundTaskService.InitializeTimer();
 
 app.Run();

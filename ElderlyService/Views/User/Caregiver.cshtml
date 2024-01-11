@@ -73,7 +73,7 @@
                                             var averageRating = caregiver.Reviews.Any() ? caregiver.Reviews.Average(r => r.Rate) : 0.0;
                                         }
 
-                                        <li class="tag__item"><a asp-action="Profile" asp-route-id="@caregiver.Users.userId"><i class="fas fa-tag mr-2"></i>View Profile</a></li>
+                                        <li class="tag__item"><a asp-action="Profile" asp-route-id="@caregiver.CaregiverId"><i class="fas fa-tag mr-2"></i>View Profile</a></li>
                                         <li class="tag__item">
                                             @if (caregiver.Reviews.Any())
                                             {

@@ -88,7 +88,7 @@ namespace ElderlyService.Controllers
                 _db.SaveChanges();
             }
 
-            return RedirectToAction("MyProfile", "User");
+            return RedirectToAction("MyProfile", "User", new {id = user.userId});
         }
 
         public IActionResult Forgotpassword()

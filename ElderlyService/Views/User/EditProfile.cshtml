@@ -62,9 +62,9 @@
                     <div class="card-body">
                         <div class="account-settings">
                             <div class="user-profile">
-                                <div class="user-avatar">
-                                    <img src="@Url.Content(Model.ImageUrl)" alt="" />
-
+                                <div class="user-avatar" style="width: 100%; overflow: hidden;">
+                                    <img style="object-fit: cover; width: 100%; min-width: 100%; min-height: 100%;" src="@Url.Content(Model.ImageUrl)" alt="" />
+                                    
                                     <label style="border-radius:1px; margin-top:8px" class="btn btn-primary">
                                         Change Photo
                                         <input asp-for="@Model.ImageFile" type="file" value="@Model.ImageUrl" class="form-control shadow-sm" id="exampleInput" placeholder="Enter something..." style="display: none;">

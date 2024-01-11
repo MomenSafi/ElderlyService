@@ -133,7 +133,12 @@
                         <p class="proile-rating">RANKINGS : <span>No reviews yet.</span></p>
 
                     }
-                    <p class="proile-rating">Your account is active to<span>@Model.EndSubscribe</span></p>
+
+                    @{
+                        var end = Model.EndSubscribe.HasValue ? Model.EndSubscribe.Value.ToString("yyyy-MM-dd") : "";
+                    }
+
+                    <p class="proile-rating">Your account is active to @end</p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Main Information</a>
@@ -165,7 +170,10 @@
                     <a>City: @Model.Users.City</a>
 
                     <p>Personal Information</p>
-                    <a>Birth Date: @Model.Users.DateOfBirth</a><br />
+                    @{
+                        var date = Model.Users.DateOfBirth.HasValue ? Model.Users.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
+                    }
+                    <a>Birth Date: @date</a><br />
                     <a>Price for Service: @Model.PriceOfService /hour</a><br />
                 </div>
             </div>
@@ -205,12 +213,12 @@
                                             <tr>
                                                 <th scope="row">1</th>
                                                 <td>@obj.Users.FirstName @obj.Users.LastName</td>
-                                                <td>@obj.BookingDate</td>
-                                                <td>@obj.StartTime</td>
-                                                <td>@obj.EndTime</td>
+                                                <td>@obj.BookingDate.ToString("yyyy-MM-dd")</td>
+                                                <td>@obj.StartTime.TimeOfDay</td>
+                                                <td>@obj.EndTime.TimeOfDay</td>
                                                 <td>
-                                                    <a href="@obj.Location" target="_blank" class="btn btn-primary mx-2">
-                                                        <i class="bi bi-check"></i> Location
+                                                    <a href="@obj.Location" target="_blank">
+                                                        Location
                                                     </a>
                                                 </td>
                                                 <td>@obj.Notes</td>
@@ -339,13 +347,13 @@
                             {
                                 <li class="comment">
                                     <div class="vcard bio">
-                                        <img src="@obj.Users.ImageUrl" alt="">
+                                        <img src="@Url.Content(obj.Users.ImageUrl)" alt="">
                                     </div>
                                     <div class="comment-body">
                                         <h3>@obj.Users.FirstName @obj.Users.LastName</h3>
                                         <div class="meta">@obj.DateTime</div>
                                         <p>@obj.Comment</p>
-                                        <p>@obj.Rate<span>@String.Format("{0:F1}", Rank) / 5</span></p>
+                                        <p><span>@String.Format("{0:F1}", Rank) / 5</span></p>
                                     </div>
                                 </li>
                             }

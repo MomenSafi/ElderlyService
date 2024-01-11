@@ -31,7 +31,7 @@ namespace ElderlyService.Controllers
             {
                 Services = _db.services.ToList(),
                 ReviewsForWebsitess = _db.reviewsForWebsites
-                .Include(t=>t.Users)
+                .Include(t => t.Users)
                 .Where(s => s.status == ReviewsForWebsites.Status.Approved).ToList()
             };
 
@@ -57,8 +57,8 @@ namespace ElderlyService.Controllers
             ViewBag.Services = _db.services.ToList();
             caregiver = _db.Caregivers
                 .Include(c => c.Users)
-                .Include(c=>c.Reviews)
-                .Where(c=>c.Valid == true).ToList();
+                .Include(c => c.Reviews)
+                .Where(c => c.Valid == true).ToList();
             if (id != null)
             {
                 caregiver = caregiver.Where(s => s.ServiceId == id).ToList();
@@ -92,8 +92,8 @@ namespace ElderlyService.Controllers
         public IActionResult Testimonials()
         {
             var testimonials = _db.reviewsForWebsites
-                .Include(t=>t.Users)
-                .Where(t=>t.status == ReviewsForWebsites.Status.Approved).ToList();
+                .Include(t => t.Users)
+                .Where(t => t.status == ReviewsForWebsites.Status.Approved).ToList();
             return View(testimonials);
         }
 
@@ -121,8 +121,11 @@ namespace ElderlyService.Controllers
 
             // Retrieve caregivers with their average rating
             var caregiversWithRating = _db.Caregivers
-                .Where(c=>c.Valid == true)
+                .Where(c => c.Valid == true)
                 .Include(c => c.Reviews) // Include Reviews navigation property
+                    .ThenInclude(r=>r.Caregiver)
+                        .ThenInclude(c=>c.Users)
+                        .Include(c=>c.Service)
                 .Where(c => c.Reviews.Any()) // Only include caregivers with at least one review
                 .Select(c => new
                 {
@@ -152,16 +155,17 @@ namespace ElderlyService.Controllers
         }
 
 
-        public IActionResult Profile(string id = "e3d7a690-c993-4bf4-8252-d3218584141c")
+        public IActionResult Profile(string id)
         {
             var caregiver = _db.Caregivers
-                .Include(c=>c.Users)
-                    .ThenInclude(u=>u.Roles)
-                .Include(c=>c.Reviews)
-                .Include(c=>c.Service)
-                .Include(c=>c.Experiences)
-                .Include(c=>c.AvilableForThisWeek)
-                .FirstOrDefault(c=>c.CaregiverId == id);
+                .Include(c => c.Users)
+                    .ThenInclude(u => u.Roles)
+                .Include(c => c.Reviews.Where(r => r.status == Reviews.Status.Approved))
+                    .ThenInclude(r => r.Users)
+                .Include(c => c.Service)
+                .Include(c => c.Experiences)
+                .Include(c => c.AvilableForThisWeek)
+                .FirstOrDefault(c => c.CaregiverId == id);
             return View(caregiver);
         }
 
@@ -169,7 +173,7 @@ namespace ElderlyService.Controllers
         {
             string? userJson = HttpContext.Session.GetString("LiveUser");
             var user = JsonConvert.DeserializeObject<Users>(userJson);
-            if(user.RoleId == "2")
+            if (user.RoleId == "2")
             {
                 return RedirectToAction("CaregiverProfile");
             }
@@ -177,7 +181,7 @@ namespace ElderlyService.Controllers
             {
                 return RedirectToAction("UserProfile");
             }
-            
+
         }
         public IActionResult CaregiverProfile()
         {
@@ -186,11 +190,12 @@ namespace ElderlyService.Controllers
             var caregiver = _db.Caregivers
                 .Include(c => c.Users)
                    .ThenInclude(u => u.Roles)
-               .Include(c => c.Reviews)
+               .Include(c => c.Reviews.Where(r => r.status == Reviews.Status.Approved))
+                    .ThenInclude(r => r.Users)
                .Include(c => c.Service)
                .Include(c => c.Experiences)
                .Include(c => c.Availabilities)
-               .Include(c=>c.Appointments)
+               .Include(c => c.Appointments)
                 .FirstOrDefault(c => c.Users.userId == user.userId);
             return View(caregiver);
         }
@@ -201,6 +206,9 @@ namespace ElderlyService.Controllers
             var user = JsonConvert.DeserializeObject<Users>(userJson);
             var us = _db.Users
                 .Include(u => u.Appointments)
+                    .ThenInclude(a=>a.Caregiver)
+                        .ThenInclude(c=>c.Users)
+
                 .SingleOrDefault(u => u.userId == user.userId);
 
             return View(us);
@@ -233,6 +241,8 @@ namespace ElderlyService.Controllers
             user.RoleId = thisuser.RoleId;
             _db.Users.Update(user);
             _db.SaveChanges();
+            user.ImageFile = null;
+            HttpContext.Session.SetString("LiveUser", JsonConvert.SerializeObject(user));
             return RedirectToAction("UserProfile", "User");
         }
 
@@ -251,6 +261,34 @@ namespace ElderlyService.Controllers
             _db.SaveChanges();
             TempData["info"] = "Your testimonial has been submitted for review. Thank you for your feedback!";
             return RedirectToAction("Profile", new { id = Id });
+        }
+
+        public IActionResult Appointment(string id)
+        {
+            Caregiver? caregiver = _db.Caregivers
+                .Include(c => c.Users)
+                .FirstOrDefault(c => c.CaregiverId == id);
+            return View(caregiver);
+        }
+        [HttpPost]
+        public IActionResult Appointment(string id, DateTime StartTime, DateTime EndTime,DateTime BookingDate,string Location, string Notes)
+        {
+            var appointment = new Appointment();
+            appointment.StartTime = StartTime;
+            appointment.EndTime = EndTime;
+            appointment.status = Models.Appointment.Status.pending;
+            appointment.BookingDate = BookingDate;
+            appointment.DayOfWeek = (Appointment.Days)BookingDate.DayOfWeek;
+            appointment.Notes = Notes;
+            appointment.Location = Location;
+            appointment.CaregiverId = id;
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            appointment.userId = user.userId;
+            _db.Appointments.Add(appointment);
+            _db.SaveChanges();
+            TempData["success"] = "Appointment apply successfully, Wait to reply it";
+            return RedirectToAction("Profile", new {id = user.userId});
         }
     }
 }

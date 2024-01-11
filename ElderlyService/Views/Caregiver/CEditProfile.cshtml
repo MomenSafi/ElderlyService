@@ -109,18 +109,13 @@
                 <input asp-for="@Model.CaregiverId" hidden />
                 <input asp-for="@Model.userId" hidden />
                 <input asp-for="@Model.Users.userId" hidden />
-                <input asp-for="@Model.Users.Password" hidden/>
+                <input asp-for="@Model.Users.Password" hidden />
                 <div class="card h-100">
                     <div class="card-body">
                         <div class="account-settings">
                             <div class="user-profile">
                                 <div class="user-avatar" style="width: 100%; overflow: hidden;">
                                     <img style="object-fit: cover; width: 100%; min-width: 100%; min-height: 100%;" src="@Url.Content(Model.Users.ImageUrl)" alt="" />
-
-                                    <label style="border-radius:1px; margin-top:8px" class="btn btn-primary">
-                                        Change Photo
-                                        <input asp-for="@Model.Users.ImageFile" type="file" value="@Model.Users.ImageUrl" class="form-control shadow-sm" id="exampleInput" placeholder="Enter something..." style="display: none;">
-                                    </label>
                                 </div>
                                 <h5 class="user-name">@Model.Users.FirstName @Model.Users.LastName</h5>
                                 <h6 class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f262a34361f123e27283a3333713c3032">@Model.Users.Email</a></h6>
@@ -138,46 +133,24 @@
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label asp-for="Users.FirstName">First Name</label>
-                                    <input asp-for="Users.FirstName" type="text" class="form-control" id="fName" placeholder="Enter first name">
-                                    <span id="nameError" class="error-message"></span>
+                                    <label asp-for="PriceOfService">Price of service</label>
+                                    <input asp-for="PriceOfService" type="number" class="form-control" id="PriceOfService" placeholder="price / hr">
+                                    <span id="PriceOfServiceError" class="error-message"></span>
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label asp-for="Users.LastName">Last Name</label>
-                                    <input asp-for="Users.LastName" type="text" class="form-control" id="lName" placeholder="Enter last name">
-                                    <span id="nameError" class="error-message"></span>
+                                    <label asp-for="Service.Name">Service Name</label>
+                                    <select name="id" asp-for="Service.ServiceId" asp-items="@(ViewBag.Services)" class="form-control" required id="Service"></select>
                                 </div>
+
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label asp-for="Users.Email">Email</label>
-                                    <input asp-for="Users.Email" type="email" class="form-control" id="Email" placeholder="Enter email ID">
-                                    <span id="emailError" class="error-message"></span>
+                                    <label asp-for="AboutYou">About You</label>
+                                    <textarea asp-for="AboutYou" cols="30" rows="7" type="text" class="form-control" id="AboutYou"></textarea>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label asp-for="Users.Phone">Phone</label>
-                                    <input asp-for="Users.Phone" type="text" class="form-control" id="Phone" placeholder="Enter phone number">
-                                    <span id="phoneError" class="error-message"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row gutters">
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label asp-for="Users.City">City</label>
-                                    <input asp-for="Users.City" type="text" class="form-control" id="City" required placeholder="Enter City">
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label asp-for="Users.DateOfBirth">Date of birth</label>
-                                    <input asp-for="Users.DateOfBirth" type="date" class="form-control" id="date">
-                                    <span id="dateError" class="error-message"></span>
-                                </div>
                             </div>
                         </div>
                         <div class="row gutters">
@@ -185,7 +158,7 @@
                                 <div class="text-right">
                                     <a asp-controller="User" asp-action="CaregiverProfile" name="submit" style="border-radius:1px" class="btn btn-secondary">Cancel</a>
 
-                                    <button asp-controller="Caregiver" asp-action="EditProfile" type="submit" id="submit" style="border-radius:1px" name="submit" class="btn btn-primary">Next</button>
+                                    <button asp-controller="Caregiver" asp-action="CEditProfile" type="submit" id="submit" style="border-radius:1px" name="submit" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
                         </div>
@@ -202,3 +175,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"></script>
 </body>
+
+
+
+
+
+
+
