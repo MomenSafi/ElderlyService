@@ -42,8 +42,6 @@ namespace ElderlyService.Models
         [ForeignKey("userId")]
         public ICollection<Caregiver> caregivers { get; set; }
         [ForeignKey("userId")]
-        public ICollection<Notification> Notifications { get; set; }
-        [ForeignKey("userId")]
         public ICollection<Appointment> Appointments { get; set; }
         [ForeignKey("userId")]
         public ICollection<ReviewsForWebsites> ReviewsForWebsites { get; set; }

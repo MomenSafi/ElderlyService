@@ -28,8 +28,6 @@ namespace ElderlyService.Models
         [ForeignKey("CaregiverId")]
         public ICollection<Availability> Availabilities { get; set; }
         [ForeignKey("CaregiverId")]
-        public ICollection<AvilableForThisWeek> AvilableForThisWeek { get; set; }
-        [ForeignKey("CaregiverId")]
         public ICollection<Payment> payments { get; set; }
 
     }

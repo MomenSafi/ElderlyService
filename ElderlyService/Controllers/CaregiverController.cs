@@ -46,8 +46,13 @@ namespace ElderlyService.Controllers
                 }
                 caregiver.Users.ImageUrl = "/Image/" + fileName;
             }
+
             string? userJson = HttpContext.Session.GetString("LiveUser");
             var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if(caregiver.Users.ImageFile==null)
+            {
+                caregiver.Users.ImageUrl = user.ImageUrl;
+            }
             caregiver.Users.Password = user.Password;
             caregiver.Users.RoleId = user.RoleId;
             _db.Users.Update(caregiver.Users);
@@ -105,14 +110,6 @@ namespace ElderlyService.Controllers
             DayOfWeek dayOfWeek = obj.Date.DayOfWeek;
             obj.DayOfWeek = (Availability.Days)dayOfWeek;
             _db.Availabilities.Add(obj);
-            var avaThisWeek = new AvilableForThisWeek
-            {
-                DayOfWeek = (AvilableForThisWeek.Days)obj.DayOfWeek,
-                StartTime = obj.StartTime,
-                EndTime = obj.EndTime,
-                CaregiverId = obj.CaregiverId,
-            };
-            _db.AvilableForThisWeek.Add(avaThisWeek);
             _db.SaveChanges();
             TempData["success"] = "Available time Add successfully";
             return RedirectToAction("CaregiverProfile", "User");
@@ -127,30 +124,9 @@ namespace ElderlyService.Controllers
         public IActionResult EditAvailable(Availability obj)
         {
             _db.Availabilities.Update(obj);
-            var existingAvailability = _db.AvilableForThisWeek
-                .Where(a => a.CaregiverId == obj.CaregiverId)
-                .ToList();
-
-            _db.AvilableForThisWeek.RemoveRange(existingAvailability);
 
             _db.SaveChanges();
             var newAvailableForThisWeek = _db.Availabilities.Where(c => c.CaregiverId == obj.CaregiverId).ToList();
-
-            foreach (var item in newAvailableForThisWeek)
-            {
-                var newAvailability = new AvilableForThisWeek
-                {
-                    DayOfWeek = (AvilableForThisWeek.Days)item.DayOfWeek,
-                    StartTime = item.StartTime,
-                    EndTime = item.EndTime,
-                    CaregiverId = item.CaregiverId,
-                };
-
-                _db.AvilableForThisWeek.Add(newAvailability);
-            }
-
-            // Save changes to the database
-            _db.SaveChanges();
 
             TempData["success"] = "Available time updated successfully";
             return RedirectToAction("CaregiverProfile", "User");
@@ -162,30 +138,6 @@ namespace ElderlyService.Controllers
             Availability? obj = _db.Availabilities.Find(id);
 
             _db.Availabilities.Remove(obj);
-
-            var existingAvailability = _db.AvilableForThisWeek
-                .Where(a => a.CaregiverId == obj.CaregiverId)
-                .ToList();
-
-            _db.AvilableForThisWeek.RemoveRange(existingAvailability);
-
-            _db.SaveChanges();
-            var newAvailableForThisWeek = _db.Availabilities.Where(c=>c.CaregiverId ==obj.CaregiverId).ToList();
-
-            foreach (var item in newAvailableForThisWeek)
-            {
-                var newAvailability = new AvilableForThisWeek
-                {
-                    DayOfWeek = (AvilableForThisWeek.Days)item.DayOfWeek,
-                    StartTime = item.StartTime,
-                    EndTime = item.EndTime,
-                    CaregiverId = item.CaregiverId,
-                };
-
-                _db.AvilableForThisWeek.Add(newAvailability);
-            }
-
-            // Save changes to the database
             _db.SaveChanges();
 
             TempData["success"] = "Available time deleted and refilled successfully";
@@ -268,6 +220,7 @@ namespace ElderlyService.Controllers
             var appointment = _db.Appointments.Find(id);
             appointment.status = Appointment.Status.Rejected;
             _db.Appointments.Update(appointment);
+            _db.SaveChanges();
             TempData["success"] = "this appointment rejected successfully";
             return RedirectToAction("CaregiverProfile", "User");
 
@@ -277,6 +230,7 @@ namespace ElderlyService.Controllers
             var appointment = _db.Appointments.Find(id);
             appointment.status = Appointment.Status.Approved;
             _db.Appointments.Update(appointment);
+            _db.SaveChanges();
             TempData["success"] = "this appointment approved successfully";
             return RedirectToAction("CaregiverProfile", "User");
         }

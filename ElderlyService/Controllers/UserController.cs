@@ -72,7 +72,7 @@ namespace ElderlyService.Controllers
             if (!string.IsNullOrEmpty(selectedDayOfWeek))
             {
                 caregiver = caregiver
-                    .Where(c => c.AvilableForThisWeek != null && c.AvilableForThisWeek.Any(a => selectedDayOfWeek.Contains(a.DayOfWeek.ToString())))
+                    .Where(c => c.Availabilities != null && c.Availabilities.Any(a => selectedDayOfWeek.Contains(a.DayOfWeek.ToString())))
                     .ToList();
             }
 
@@ -82,7 +82,7 @@ namespace ElderlyService.Controllers
                 DateTime end = DateTime.Today.Add(TimeSpan.Parse(endTime));
 
                 caregiver = caregiver
-                    .Where(c => c.AvilableForThisWeek.Any(a => a.StartTime.TimeOfDay >= start.TimeOfDay && a.EndTime.TimeOfDay <= end.TimeOfDay))
+                    .Where(c => c.Availabilities.Any(a => a.StartTime.TimeOfDay >= start.TimeOfDay && a.EndTime.TimeOfDay <= end.TimeOfDay))
                     .ToList();
             }
 
@@ -123,9 +123,8 @@ namespace ElderlyService.Controllers
             var caregiversWithRating = _db.Caregivers
                 .Where(c => c.Valid == true)
                 .Include(c => c.Reviews) // Include Reviews navigation property
-                    .ThenInclude(r=>r.Caregiver)
-                        .ThenInclude(c=>c.Users)
-                        .Include(c=>c.Service)
+                .Include(c=>c.Users)
+                .Include(c=>c.Service)
                 .Where(c => c.Reviews.Any()) // Only include caregivers with at least one review
                 .Select(c => new
                 {
@@ -164,7 +163,7 @@ namespace ElderlyService.Controllers
                     .ThenInclude(r => r.Users)
                 .Include(c => c.Service)
                 .Include(c => c.Experiences)
-                .Include(c => c.AvilableForThisWeek)
+                .Include(c => c.Availabilities)
                 .FirstOrDefault(c => c.CaregiverId == id);
             return View(caregiver);
         }
@@ -237,6 +236,10 @@ namespace ElderlyService.Controllers
             }
             string? userJson = HttpContext.Session.GetString("LiveUser");
             var thisuser = JsonConvert.DeserializeObject<Users>(userJson);
+            if (user.ImageFile == null)
+            {
+                user.ImageUrl = thisuser.ImageUrl;
+            }
             user.Password = thisuser.Password;
             user.RoleId = thisuser.RoleId;
             _db.Users.Update(user);

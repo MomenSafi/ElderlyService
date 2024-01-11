@@ -30,10 +30,13 @@
                 </tr>
             </thead>
             <tbody>
+                @{
+                    int count = 1;
+                }
                 @foreach (var obj in Model.OrderBy(r => r.DateTime))
                 {
                     <tr>
-                        <th scope="row">1</th>
+                        <th scope="row">@count</th>
                         <td>@obj.Users.FirstName @obj.Users.LastName</td>
                         <td>@obj.Comment</td>
                         <td>@obj.status</td>
@@ -47,6 +50,7 @@
                             </a>
                         </td>
                     </tr>
+                    count++;
                 }
             </tbody>
         </table>

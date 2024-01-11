@@ -187,55 +187,7 @@
                             <div class="col-md-12">
                                 <p>@Model.AboutYou</p>
                             </div>
-                            <div class="col-md-12">
-                                <label>Appointment</label>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Coustomer Name</th>
-                                            <th scope="col">Booking Date</th>
-                                            <th scope="col">Start Time</th>
-                                            <th scope="col">End Time</th>
-                                            <th scope="col">Location</th>
-                                            <th scope="col">Notes</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Action</th>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        @foreach (var obj in Model.Appointments.OrderBy(a => a.BookingDate))
-                                        {
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>@obj.Users.FirstName @obj.Users.LastName</td>
-                                                <td>@obj.BookingDate.ToString("yyyy-MM-dd")</td>
-                                                <td>@obj.StartTime.TimeOfDay</td>
-                                                <td>@obj.EndTime.TimeOfDay</td>
-                                                <td>
-                                                    <a href="@obj.Location" target="_blank">
-                                                        Location
-                                                    </a>
-                                                </td>
-                                                <td>@obj.Notes</td>
-                                                <td>@obj.status</td>
-                                                <td>
-                                                    <a asp-controller="Caregiver" asp-action="ApproveAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-primary mx-2">
-                                                        <i class="bi bi-check"></i> Approve
-                                                    </a>
-                                                    <a asp-controller="Caregiver" asp-action="RejectAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-danger mx-2">
-                                                        <i class="bi bi-x"></i> Reject
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -335,7 +287,88 @@
         </div>
     </form>
 </div>
+<div class="site-section">
+    <div class="container">
+        <div class="col-md-12">
+            <label>Appointment</label>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Coustomer Name</th>
+                        <th scope="col">Coustomer phone</th>
+                        <th scope="col">Booking Date</th>
+                        <th scope="col">Start Time</th>
+                        <th scope="col">End Time</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Notes</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
 
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var obj in Model.Appointments.OrderBy(a => a.BookingDate))
+                    {
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>@obj.Users.FirstName @obj.Users.LastName</td>
+                            <td>@obj.Users.Phone</td>
+                            <td>@obj.BookingDate.ToString("yyyy-MM-dd")</td>
+                            <td>@obj.StartTime.TimeOfDay</td>
+                            <td>@obj.EndTime.TimeOfDay</td>
+                            <td>
+                                <a href="@obj.Location" target="_blank">
+                                    Location
+                                </a>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#notes">
+                                    View Notes
+                                </button>
+
+                                <!-- Notes Modal -->
+                                <div class="modal fade" id="notes" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="notesModalLabel">Appointment Notes</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                @obj.Notes
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@obj.status</td>
+                            <td>
+                                @if (obj.status == Appointment.Status.pending)
+                                {
+                                    <a asp-controller="Caregiver" asp-action="ApproveAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-primary mx-2">
+                                        <i class="bi bi-check"></i> Approve
+                                    </a>
+                                    <a asp-controller="Caregiver" asp-action="RejectAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-danger mx-2">
+                                        <i class="bi bi-x"></i> Reject
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <div class="site-section">
     <div class="container">
         <div class="row">

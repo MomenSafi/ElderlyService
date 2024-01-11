@@ -38,6 +38,53 @@
             text-transform: capitalize !important;
             text-align: center;
         }
+
+
+        .owl-carousel .owl-nav {
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .owl-carousel .owl-nav button {
+            background: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .owl-carousel .owl-dots {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .owl-carousel .owl-dots button {
+            background: #007bff;
+            width: 10px;
+            height: 10px;
+            border: none;
+            margin: 0 5px;
+            border-radius: 100%;
+            transition: background 0.3s ease;
+        }
+
+         .owl-carousel .owl-dots button.active {
+             background: #fff;
+         }
+
+        .editTestomonialImg {
+            width: 80px !important;
+            border-radius: 50% !important;
+            margin-bottom: 30px !important;
+            margin-top: -25px !important;
+            display: initial !important;
+        }
     </style>
 </head>
 
@@ -48,26 +95,35 @@
 </div>
 
 
-
 <div class="site-section bg-light">
     <div class="container">
         <div class="row">
-            @foreach (var testimonials in Model.OrderBy(t => t.DateTime))
-            {
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
-                    <div class="testimonial text-center">
-                        <img src="@Url.Content(testimonials.Users.ImageUrl)" alt="Image" class="img-fluid">
-                        <blockquote>
-                            <p class="quote">@testimonials.Comment</p>
-                            <cite class="author">@testimonials.Users.FirstName @testimonials.Users.LastName</cite>
-                        </blockquote>
-                    </div>
-                </div>
-            }
+            <div class="owl-carousel owl-theme">
+                @{
+                    var pageSize = 6;
+                    var page = 1;
+                    var testimonialsToShow = Model.OrderBy(t => t.DateTime).Skip((page - 1) * pageSize).Take(pageSize);
+                }
 
+                @foreach (var testimonials in testimonialsToShow)
+                {
+                    <div class="item">
+                        <div>
+                            <div class="testimonial text-center" style="margin:5px">
+                                <img src="@Url.Content(testimonials.Users.ImageUrl)" alt="Image" class="img-fluid editTestomonialImg">
+                                <blockquote>
+                                    <p class="quote">@testimonials.Comment</p>
+                                    <cite class="author">@testimonials.Users.FirstName @testimonials.Users.LastName</cite>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
+
 @*
     add feedback
 *@
@@ -143,4 +199,18 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
+<script>
+    $(document).ready(function () {
+        $(".owl-carousel").owlCarousel({
+            items: 3,
+            loop: true,
+            autoplay: true,
+            autoplayHoverPause: true,
+            nav: false,
+            dots: true
+        });
+    });
+</script>

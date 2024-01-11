@@ -101,6 +101,7 @@
                             <input name="SearchItem" type="text" class="form-control" placeholder="Type a name of caregiver">
                         </div>
                         <div class="form-group">
+                            <label for="Service">Services</label>
                             <select style="width:100%" class="form-select" name="id" asp-items="@(new SelectList(ViewBag.Services,"ServiceId","Name"))">
                                 <option value="">All</option>
                             </select>

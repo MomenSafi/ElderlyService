@@ -104,27 +104,30 @@
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Caregiver Name</th>
+                                            <th scope="col">Caregiver Phone</th>
                                             <th scope="col">Booking Date</th>
                                             <th scope="col">Start Time</th>
                                             <th scope="col">End Time</th>
-                                            <th scope="col">Notes</th>
                                             <th scope="col">Status</th>
 
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        @{
+                                            int count = 1;
+                                        }
                                         @foreach (var obj in Model.Appointments.OrderBy(a => a.BookingDate))
                                         {
                                             <tr>
-                                                <th scope="row">1</th>
+                                                <th scope="row">@count</th>
                                                 <td>@obj.Caregiver.Users.FirstName @obj.Caregiver.Users.LastName</td>
+                                                <th scope="row">@obj.Caregiver.Users.Phone</th>
                                                 <td>@obj.BookingDate.ToString("yyyy-MM-dd")</td>
                                                 <td>@obj.StartTime.TimeOfDay</td>
                                                 <td>@obj.EndTime.TimeOfDay</td>
-                                                <td>@obj.Notes</td>
                                                 <td>@obj.status</td>
                                             </tr>
+                                            count++;
                                         }
                                     </tbody>
                                 </table>

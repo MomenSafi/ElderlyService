@@ -55,6 +55,9 @@
     <div class="site-section">
         <div class="container">
             <div class="row">
+                @{
+                    int count = 1;
+                }
                 @foreach (var service in Model.Services)
                 {
                     <div class="col-6 col-sm-6 col-md-6 mb-4 mb-lg-0 col-lg-3">
@@ -69,6 +72,12 @@
                             </div>
                         </div>
                     </div>
+                    if(count == 4)
+                    {
+                        break;
+                    }
+                    count++;
+
                 }
             </div>
         </div>
@@ -157,7 +166,7 @@
         <div class="container">
             <div class="row">
                 @{
-                    int count = 0;
+                     count = 0;
                 }
                 @foreach (var testimonials in Model.ReviewsForWebsitess.OrderBy(t => t.DateTime))
                 {
@@ -172,7 +181,7 @@
                     </div>
 
                     count++;
-                    if (count == 2)
+                    if (count == 3)
                     {
                         break;
                     }

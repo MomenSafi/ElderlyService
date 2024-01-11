@@ -45,8 +45,8 @@ namespace ElderlyService.Controllers
                 }
             }
 
-                TempData["info"] = "This Email isn't registered, please SignUp";
-                return View();            
+            TempData["info"] = "This Email isn't registered, please SignUp";
+            return View();
         }
         public IActionResult Logout()
         {
@@ -66,38 +66,38 @@ namespace ElderlyService.Controllers
             string userJson = JsonConvert.SerializeObject(user);
             HttpContext.Session.SetString("LiveUser", userJson);
 
-            if (!isCaregiver)
+            // Set common properties
+            user.RoleId = isCaregiver ? "2" : "3";
+            user.userId = Guid.NewGuid().ToString();
+
+            // Add user to the database
+            _db.Users.Add(user);
+            _db.SaveChanges();
+
+            // Update the session with the modified user object
+            HttpContext.Session.SetString("LiveUser", JsonConvert.SerializeObject(user));
+
+            if (isCaregiver)
             {
-                user.RoleId = "3";
-                user.userId = Guid.NewGuid().ToString();
-                _db.Users.Add(user);
+                var caregiver = new Caregiver
+                {
+                    CaregiverId = Guid.NewGuid().ToString(),
+                    userId = user.userId
+                };
+
+                // Add caregiver to the database
+                _db.Caregivers.Add(caregiver);
                 _db.SaveChanges();
             }
-            else
-            {
-                user.RoleId = "2";
-                user.userId = Guid.NewGuid().ToString();
-                user.IsCaregiver = true;
-                _db.Users.Add(user);
-                _db.SaveChanges();
 
-                var cargiver = new Caregiver();
-                cargiver.CaregiverId = Guid.NewGuid().ToString();
-                cargiver.userId = user.userId;
-                _db.Caregivers.Add(cargiver);
-                _db.SaveChanges();
-            }
-
-            return RedirectToAction("MyProfile", "User", new {id = user.userId});
+            return RedirectToAction("MyProfile", "User");
         }
+
+
 
         public IActionResult Forgotpassword()
         {
             return RedirectToAction("LogIn");
-        }
-        public IActionResult RegisrationCaregiver()
-        {
-            return View();
         }
     }
 }

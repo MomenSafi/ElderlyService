@@ -13,7 +13,6 @@ namespace ElderlyService.Data
         public DbSet<Users> Users { get; set; }
         public DbSet<Caregiver> Caregivers { get; set; }
         public DbSet<Reviews> Reviews { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Service> services { get; set; }
         public DbSet<Experience> Experiences { get; set; }
@@ -21,7 +20,6 @@ namespace ElderlyService.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<ReviewsForWebsites> reviewsForWebsites { get; set; }
         public DbSet<CardData> Cards { get; set; }
-        public DbSet<AvilableForThisWeek> AvilableForThisWeek { get; set; }
 
         public List<Service> GetService()
         {
@@ -49,12 +47,6 @@ namespace ElderlyService.Data
                .WithOne(r => r.Users)
                .HasForeignKey(r => r.userId)
                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Users>()
-                .HasMany(u=>u.Notifications)
-                .WithOne(r => r.users)
-                .HasForeignKey(r => r.userId)
-                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Users>()
                 .HasMany(u=>u.Appointments)
@@ -88,12 +80,6 @@ namespace ElderlyService.Data
 
             modelBuilder.Entity<Caregiver>()
                 .HasMany(u => u.Availabilities)
-                .WithOne(r => r.Caregiver)
-                .HasForeignKey(r => r.CaregiverId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Caregiver>()
-                .HasMany(u => u.AvilableForThisWeek)
                 .WithOne(r => r.Caregiver)
                 .HasForeignKey(r => r.CaregiverId)
                 .OnDelete(DeleteBehavior.Restrict);
