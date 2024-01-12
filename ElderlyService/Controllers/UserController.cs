@@ -163,7 +163,7 @@ namespace ElderlyService.Controllers
                     .ThenInclude(r => r.Users)
                 .Include(c => c.Service)
                 .Include(c => c.Experiences)
-                .Include(c => c.Availabilities)
+                .Include(c => c.Availabilities.Where(a=>a.Status == 1))
                 .FirstOrDefault(c => c.CaregiverId == id);
             return View(caregiver);
         }
@@ -193,7 +193,7 @@ namespace ElderlyService.Controllers
                     .ThenInclude(r => r.Users)
                .Include(c => c.Service)
                .Include(c => c.Experiences)
-               .Include(c => c.Availabilities)
+                .Include(c => c.Availabilities.Where(a => a.Status == 1))
                .Include(c => c.Appointments)
                 .FirstOrDefault(c => c.Users.userId == user.userId);
             return View(caregiver);

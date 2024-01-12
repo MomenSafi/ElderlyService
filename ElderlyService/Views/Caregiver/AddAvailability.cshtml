@@ -61,13 +61,21 @@
                 </div>
             </div>
             <div class="card-body p-4">
-                <form method="post" class="">
+                <form method="post" class="" onsubmit="return validateForm()">
                     <input asp-for="@Model.CaregiverId" hidden value="@ViewBag.Caregiver.CaregiverId" />
                     <div class="border p-3">
                         <div class="form-floating py-2 col-12">
-                            <label asp-for="Date" class="ms-2"></label>
-                            <input asp-for="Date" type="date" class="form-control border-0 shadow" />
-                            <span asp-validation-for="Date" class="text-danger"></span>
+                            <label asp-for="DayOfWeek">Select Day of Week:</label>
+                            <select asp-for="DayOfWeek" class="form-control border-0 shadow">
+                                <option value=""></option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                            </select>
                         </div>
                         <div class="form-floating py-2 col-12">
                             <label asp-for="StartTime" class="ms-2"></label>
@@ -77,7 +85,7 @@
                         <div class="form-floating py-2 col-12">
                             <label asp-for="EndTime" class="ms-2"></label>
                             <input asp-for="EndTime" type="time" class="form-control border-0 shadow" />
-                            <span asp-validation-for="EndTime" class="text-danger"></span>
+                            <span asp-validation-for="EndTime" id="endTimeErrorMessage" class="text-danger"></span>
                         </div>
 
                         <div class="row pt-2">
@@ -101,5 +109,20 @@
             <partial name="_ValidationScriptsPartial" />
         }
     }
-    
+    <script>
+        function validateForm() {
+            var startTime = document.getElementById("StartTime").value;
+            var endTime = document.getElementById("EndTime").value;
+
+            var endTimeErrorMessage = document.getElementById("endTimeErrorMessage");
+
+            if (startTime >= endTime) {
+                endTimeErrorMessage.innerText = "End Time must be after Start Time.";
+                return false;
+            }
+
+            endTimeErrorMessage.innerText = "";
+            return true;
+        }
+    </script>
 </body>

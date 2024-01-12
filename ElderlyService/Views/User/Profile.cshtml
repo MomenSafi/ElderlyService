@@ -202,7 +202,7 @@
                                         @{
                                             int count = 1;
                                         }
-                                        @foreach (var obj in Model.Availabilities.OrderBy(q => q.DayOfWeek))
+                                        @foreach (var obj in Model.Availabilities.OrderBy(q => q.Date))
                                         {
                                             <tr>
                                                 <th scope="row">@count</th>

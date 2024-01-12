@@ -52,43 +52,42 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 blog-content">
-                <section class="lightt">
-                    <div class="container py-2">
-                        <div class="h1 text-center text-dark" id="pageHeaderTitle">Caregivers</div>
+                <section id="gallery">
+                    <div class="row">
                         @foreach (var caregiver in Model)
                         {
-                            <article class="postcard lightt blue">
-                                <a class="postcard__img_link">
-                                    <img class="postcard__img" src="@caregiver.Users.ImageUrl" alt="image title" />
-                                </a>
-                                <div class="postcard__text t-dark">
-                                    <h1 class="postcard__title blue">@caregiver.Users.FirstName @caregiver.Users.LastName</h1>
-                                    <div class="postcard__subtitle small">
-                                        <p>@caregiver.Users.City</p>
+                            <div class="col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="testimonial text-center">
+                                        <img src="@caregiver.Users.ImageUrl" alt="img" class="img-fluid" />
                                     </div>
-                                    <div class="postcard__bar"></div>
-                                    <div class="postcard__preview-txt">@caregiver.AboutYou</div>
-                                    <ul class="postcard__tagbox">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@caregiver.Users.FirstName @caregiver.Users.LastName</h5>
+                                        <h5 class="card-title small">@caregiver.Service.Name</h5>
+                                        <p class="card-text">
+                                            @caregiver.AboutYou
+                                        </p>
+                                        <a asp-action="Profile" asp-route-id="@caregiver.CaregiverId" class="btn btn-outline-success btn-sm">Read More</a>
                                         @{
                                             var averageRating = caregiver.Reviews.Any() ? caregiver.Reviews.Average(r => r.Rate) : 0.0;
                                         }
-
-                                        <li class="tag__item"><a asp-action="Profile" asp-route-id="@caregiver.CaregiverId"><i class="fas fa-tag mr-2"></i>View Profile</a></li>
-                                        <li class="tag__item">
+                                        <a class="btn btn-outline-danger btn-sm">
                                             @if (caregiver.Reviews.Any())
                                             {
                                                 <div>
-                                                    <p>Average Rating: @String.Format("{0:F1}", averageRating) / 5</p>
+                                                    @String.Format("{0:F1}", averageRating) / 5
                                                 </div>
                                             }
                                             else
                                             {
-                                                <p>No reviews yet.</p>
+                                                <div>
+                                                    No reviews yet.
+                                                </div>
                                             }
-                                        </li>
-                                    </ul>
+                                        </a>
+                                    </div>
                                 </div>
-                            </article>
+                            </div>
                         }
                     </div>
                 </section>
@@ -137,3 +136,4 @@
         </div>
     </div>
 </div>
+

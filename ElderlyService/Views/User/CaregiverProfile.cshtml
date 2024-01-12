@@ -211,8 +211,17 @@
                                         <tbody>
                                             @{
                                                 int count = 1;
+
+                                                DateTime currentDate = DateTime.Now;
+                                                DateTime toDate = DateTime.Now.AddDays(7);
+
+                                                var availabilitiesThisWeek = Model.Availabilities
+                                                .Where(a => a.Date >= currentDate && a.Date <= toDate)
+                                                .OrderBy(q => q.Date)
+                                                .ToList();
                                             }
-                                            @foreach (var obj in Model.Availabilities.OrderBy(a => a.DayOfWeek))
+
+                                            @foreach (var obj in availabilitiesThisWeek)
                                             {
                                                 <tr>
                                                     <th scope="row">@count</th>
@@ -305,8 +314,8 @@
                         <th scope="col">Location</th>
                         <th scope="col">Notes</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Available</th>
                         <th scope="col">Action</th>
-
                     </tr>
                 </thead>
                 <tbody>
@@ -350,18 +359,40 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>@obj.status</td>
-                            <td>
-                                @if (obj.status == Appointment.Status.pending)
+                            @{
+                                var available = Model.Availabilities.Where(a => a.Date == obj.BookingDate).ToList();
+                                var availablebool = false;
+                                foreach(var item in available)
                                 {
+                                    if(obj.StartTime.TimeOfDay >= item.StartTime.TimeOfDay && item.EndTime.TimeOfDay >= obj.EndTime.TimeOfDay)
+                                    {
+                                        availablebool = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            <td>@obj.status</td>
+
+                            @if (obj.status == Appointment.Status.pending)
+                            {
+                                @if (availablebool)
+                                {
+                                    <td>You Available</td>
+                                }
+                                else
+                                {
+                                    <td>You are Not Available</td>
+                                }
+                                <td>
                                     <a asp-controller="Caregiver" asp-action="ApproveAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-primary mx-2">
                                         <i class="bi bi-check"></i> Approve
                                     </a>
                                     <a asp-controller="Caregiver" asp-action="RejectAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-danger mx-2">
                                         <i class="bi bi-x"></i> Reject
                                     </a>
-                                }
-                            </td>
+                                </td>
+                            }
+
                         </tr>
                     }
                 </tbody>
