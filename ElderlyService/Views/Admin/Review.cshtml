@@ -35,7 +35,7 @@
                 @{
                     int count = 1;
                 }
-                @foreach (var obj in Model.OrderBy(r=>r.DateTime))
+                @foreach (var obj in Model.OrderByDescending(r => r.DateTime))
                 {
                     <tr>
                         <th scope="row">@count</th>
@@ -44,15 +44,35 @@
                         <td>@obj.Rate</td>
                         <td>@obj.Comment</td>
                         <td>@obj.status</td>
-                        <td>@obj.DateTime</td>
-                        <td>
-                            <a data-id="@obj.ReviewID" class="btn btn-primary mx-2 Approve">
-                                <i class="bi bi-pencil-square"></i> Approve
-                            </a>
-                            <a data-id="@obj.ReviewID" class="btn btn-danger mx-2 Reject">
-                                <i class="bi bi-trash-fill"></i> Reject
-                            </a>
-                        </td>
+                        <td>@obj.DateTime.ToString("yyyy-MM-dd")</td>
+                        @if (obj.status == Reviews.Status.pending)
+                        {
+                            <td>
+                                <a data-id="@obj.ReviewID" class="btn btn-primary mx-2 Approve">
+                                    <i class="bi bi-pencil-square"></i> Approve
+                                </a>
+                                <a data-id="@obj.ReviewID" class="btn btn-danger mx-2 Reject">
+                                    <i class="bi bi-trash-fill"></i> Reject
+                                </a>
+                            </td>
+                        }
+                        else if (obj.status == Reviews.Status.Approved)
+                        {
+                            <td>
+
+                                <a data-id="@obj.ReviewID" class="btn btn-danger mx-2 Reject">
+                                    <i class="bi bi-trash-fill"></i> Reject
+                                </a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a data-id="@obj.ReviewID" class="btn btn-primary mx-2 Approve">
+                                    <i class="bi bi-pencil-square"></i> Approve
+                                </a>
+                            </td>
+                        }
                     </tr>
                     count++;
                 }

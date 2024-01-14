@@ -40,23 +40,41 @@
             text-transform: capitalize !important;
             text-align: center;
         }
+
+        .card-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4; /* Number of lines to show */
+            -webkit-box-orient: vertical;
+        }
+
+        .show-more {
+            color: blue;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 
 <div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
     <div class="auto-container">
+        <h1 class="heading mb-3 header">Caregivers</h1>
     </div>
 </div>
 
 <div class="site-section">
-    <div class="container">
+    <div class="container" style="min-width:100%">
         <div class="row">
             <div class="col-md-8 blog-content">
                 <section id="gallery">
                     <div class="row">
                         @foreach (var caregiver in Model)
                         {
-                            <div class="col-lg-4 mb-4">
+                            <div class="col-lg-4 mb-4 mx-auto" style="margin-top:3%">
                                 <div class="card">
                                     <div class="testimonial text-center">
                                         <img src="@caregiver.Users.ImageUrl" alt="img" class="img-fluid" />
@@ -64,8 +82,8 @@
                                     <div class="card-body">
                                         <h5 class="card-title">@caregiver.Users.FirstName @caregiver.Users.LastName</h5>
                                         <h5 class="card-title small">@caregiver.Service.Name</h5>
-                                        <p class="card-text">
-                                            @caregiver.AboutYou
+                                        <p class="card-text" id="aboutYou_@caregiver.CaregiverId">
+                                            @Html.Raw(caregiver.AboutYou.Length > 250 ? caregiver.AboutYou.Substring(0, 250) + "<span class='hidden'>" + caregiver.AboutYou.Substring(250) + "</span>" : caregiver.AboutYou)
                                         </p>
                                         <a asp-action="Profile" asp-route-id="@caregiver.CaregiverId" class="btn btn-outline-success btn-sm">Read More</a>
                                         @{
@@ -75,7 +93,7 @@
                                             @if (caregiver.Reviews.Any())
                                             {
                                                 <div>
-                                                    @String.Format("{0:F1}", averageRating) / 5
+                                                    @String.Format("{0:F1}", averageRating) / 5.0
                                                 </div>
                                             }
                                             else
@@ -90,6 +108,7 @@
                             </div>
                         }
                     </div>
+                    
                 </section>
             </div>
             <div class="col-md-4 sidebar">
@@ -100,14 +119,8 @@
                             <input name="SearchItem" type="text" class="form-control" placeholder="Type a name of caregiver">
                         </div>
                         <div class="form-group">
-                            <label for="Service">Services</label>
-                            <select style="width:100%" class="form-select" name="id" asp-items="@(new SelectList(ViewBag.Services,"ServiceId","Name"))">
-                                <option value="">All</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <label for="selectedDayOfWeek">Select Day of Week:</label>
-                            <select style="width:100%" class="form-select" name="selectedDayOfWeek">
+                            <select style="width:100%" class="form-control" name="selectedDayOfWeek">
                                 <option value="">All</option>
                                 <option value="Saturday">Saturday</option>
                                 <option value="Sunday">Sunday</option>
@@ -136,4 +149,7 @@
         </div>
     </div>
 </div>
+
+
+
 

@@ -31,14 +31,15 @@
                     <th scope="col">Email</th>
                     <th scope="col">Phone</th>
                     <th scope="col">Amount</th>
-                    <th scope="col">Actiot</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @{
                     int count = 1;
                 }
-                @foreach (var obj in Model)
+                @foreach (var obj in Model.OrderByDescending(p => p.Date))
                 {
                     <tr>
                         <th scope="row">@count</th>
@@ -46,14 +47,19 @@
                         <td>@obj.Caregiver.Users.Email</td>
                         <td>@obj.Caregiver.Users.Phone</td>
                         <td>@obj.Amount</td>
-                        <td>
-                            <a data-id="@obj.PaymentId" class="btn btn-primary mx-2 Approve">
-                                <i class="bi bi-pencil-square "></i> Approve
-                            </a>
-                            <a data-id="@obj.PaymentId" class="btn btn-danger mx-2 Reject">
-                                <i class="bi bi-trash-fill "></i> Reject
-                            </a>
-                        </td>
+                        <td>@obj.status</td>
+                        @if (obj.status == Payment.Status.pending)
+                        {
+
+                            <td>
+                                <a data-id="@obj.PaymentId" class="btn btn-primary mx-2 Approve">
+                                    <i class="bi bi-pencil-square "></i> Approve
+                                </a>
+                                <a data-id="@obj.PaymentId" class="btn btn-danger mx-2 Reject">
+                                    <i class="bi bi-trash-fill "></i> Reject
+                                </a>
+                            </td>
+                        }
                     </tr>
                     count++;
                 }

@@ -54,11 +54,13 @@ namespace ElderlyService.Controllers
         public IActionResult Caregiver(int? id, string? SearchItem, string? selectedDayOfWeek, string? startTime, string? endTime)
         {
             List<Caregiver> caregiver;
-            ViewBag.Services = _db.services.ToList();
             caregiver = _db.Caregivers
                 .Include(c => c.Users)
+                .Include(c=>c.Service)
                 .Include(c => c.Reviews)
-                .Where(c => c.Valid == true).ToList();
+                .Include(c=>c.Availabilities)
+                .Where(c => c.Valid == true)
+                .ToList();
             if (id != null)
             {
                 caregiver = caregiver.Where(s => s.ServiceId == id).ToList();
@@ -75,7 +77,6 @@ namespace ElderlyService.Controllers
                     .Where(c => c.Availabilities != null && c.Availabilities.Any(a => selectedDayOfWeek.Contains(a.DayOfWeek.ToString())))
                     .ToList();
             }
-
             if (!string.IsNullOrEmpty(startTime) && !string.IsNullOrEmpty(endTime))
             {
                 DateTime start = DateTime.Today.Add(TimeSpan.Parse(startTime));
@@ -85,7 +86,7 @@ namespace ElderlyService.Controllers
                     .Where(c => c.Availabilities.Any(a => a.StartTime.TimeOfDay >= start.TimeOfDay && a.EndTime.TimeOfDay <= end.TimeOfDay))
                     .ToList();
             }
-
+            caregiver = caregiver.OrderByDescending(c => c.Reviews.Any() ? c.Reviews.Average(r => r.Rate) : 0).ToList();
             return View(caregiver);
         }
 
@@ -193,8 +194,9 @@ namespace ElderlyService.Controllers
                     .ThenInclude(r => r.Users)
                .Include(c => c.Service)
                .Include(c => c.Experiences)
-                .Include(c => c.Availabilities.Where(a => a.Status == 1))
+               .Include(c => c.Availabilities.Where(a => a.Status == 1))
                .Include(c => c.Appointments)
+                    .ThenInclude(a=>a.Users)
                 .FirstOrDefault(c => c.Users.userId == user.userId);
             return View(caregiver);
         }
@@ -291,7 +293,7 @@ namespace ElderlyService.Controllers
             _db.Appointments.Add(appointment);
             _db.SaveChanges();
             TempData["success"] = "Appointment apply successfully, Wait to reply it";
-            return RedirectToAction("Profile", new {id = user.userId});
+            return RedirectToAction("Profile", new {id = appointment.CaregiverId});
         }
     }
 }

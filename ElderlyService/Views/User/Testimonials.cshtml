@@ -40,43 +40,7 @@
         }
 
 
-        .owl-carousel .owl-nav {
-            position: absolute;
-            top: 50%;
-            width: 30%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-        }
 
-        .owl-carousel .owl-nav button {
-            background: #007bff;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .owl-carousel .owl-dots {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .owl-carousel .owl-dots button {
-            background: #007bff;
-            width: 10px;
-            height: 10px;
-            border: none;
-            margin: 0 5px;
-            border-radius: 100%;
-            transition: background 0.3s ease;
-        }
-
-         .owl-carousel .owl-dots button.active {
-             background: #fff;
-         }
 
         .editTestomonialImg {
             width: 80px !important;
@@ -102,7 +66,7 @@
                 @{
                     var pageSize = 6;
                     var page = 1;
-                    var testimonialsToShow = Model.OrderBy(t => t.DateTime).Skip((page - 1) * pageSize).Take(pageSize);
+                    var testimonialsToShow = Model.OrderByDescending(t => t.DateTime).Skip((page - 1) * pageSize).Take(pageSize);
                 }
 
                 @foreach (var testimonials in testimonialsToShow)
@@ -119,6 +83,11 @@
                         </div>
                     </div>
                 }
+            </div>
+            <div class="owl-nav mx-auto">
+                <i class="bi bi-circle owl-prev"></i>
+                <i class="bi bi-circle owl-play-pause" hidden></i>
+                <i class="bi bi-circle owl-next"></i>
             </div>
         </div>
     </div>
@@ -204,13 +173,32 @@
 
 <script>
     $(document).ready(function () {
-        $(".owl-carousel").owlCarousel({
+        var owl = $(".owl-carousel").owlCarousel({
             items: 3,
             loop: true,
             autoplay: true,
             autoplayHoverPause: true,
             nav: false,
-            dots: true
+            dots: false,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 3
+                }
+            }
         });
+
+        // Custom navigation controls
+        $(".owl-prev").click(function () {
+            owl.trigger("prev.owl.carousel");
+        });
+
+        $(".owl-next").click(function () {
+            owl.trigger("next.owl.carousel");
+        });
+
+
     });
 </script>

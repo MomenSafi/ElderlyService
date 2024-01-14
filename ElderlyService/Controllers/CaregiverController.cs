@@ -22,18 +22,21 @@ namespace ElderlyService.Controllers
 
         static DateTime GetDateForDayOfWeek(Days targetDay)
         {
-
             DateTime currentDate = DateTime.Now;
 
             int currentDay = (int)currentDate.DayOfWeek;
-
             int targetDayInt = (int)targetDay;
 
             int difference = targetDayInt - currentDay;
 
-            DateTime targetDate = currentDate.AddDays(difference);
+            // Adjust the difference to ensure a positive value
+            if (difference <= 0)
+            {
+                difference += 7;
+            }
 
-            return targetDate;
+            DateTime targetDate = currentDate.AddDays(difference - 1); // Subtract 1 here
+            return targetDate.Date; // to get the date without the time component
         }
 
         public IActionResult EditProfile(string id)
@@ -155,7 +158,13 @@ namespace ElderlyService.Controllers
         [HttpPost]
         public IActionResult EditAvailable(Availability obj)
         {
-            var availabile = _db.Availabilities.Where(a=>a.DayOfWeek == obj.DayOfWeek).ToList();
+            var avail = _db.Availabilities.Find(obj.AvailabilityID);
+            var availabile = _db.Availabilities
+                        .Where(a => a.CaregiverId == avail.CaregiverId &&
+                        a.DayOfWeek == avail.DayOfWeek &&
+                        a.StartTime.TimeOfDay == avail.StartTime.TimeOfDay &&
+                        a.EndTime.TimeOfDay == avail.EndTime.TimeOfDay)
+                        .ToList();
             foreach (var item in availabile)
             {
                 item.StartTime = obj.StartTime;
@@ -173,8 +182,13 @@ namespace ElderlyService.Controllers
         public IActionResult DeleteAvailable(int id)
         {
             Availability obj = _db.Availabilities.Find(id);
-            var availabilityToRemove = _db.Availabilities.Where(a => a.DayOfWeek == obj.DayOfWeek).ToList();
-            foreach (var item in availabilityToRemove)
+            var availabile = _db.Availabilities
+                        .Where(a => a.CaregiverId == obj.CaregiverId &&
+                        a.DayOfWeek == obj.DayOfWeek &&
+                        a.StartTime.TimeOfDay == obj.StartTime.TimeOfDay &&
+                        a.EndTime.TimeOfDay == obj.EndTime.TimeOfDay)
+                        .ToList();
+            foreach (var item in availabile)
             {
                 _db.Availabilities.Remove(item);
             }

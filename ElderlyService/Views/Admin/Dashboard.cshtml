@@ -68,7 +68,7 @@
                     @{
                         int count = 1;
                     }
-                    @foreach (var obj in Model.OrderBy(a=>a.DateTime))
+                    @foreach (var obj in Model.OrderByDescending(a=>a.DateTime))
                     {
                         <tr>
                             <td scope="row">@count</td>

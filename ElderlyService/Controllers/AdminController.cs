@@ -161,7 +161,6 @@ namespace ElderlyService.Controllers
                 .Include(r=>r.Users)
                 .Include(r=>r.Caregiver)
                     .ThenInclude(r=>r.Users)
-                .Where(r=>r.status == Reviews.Status.pending)
                 .ToList();
             return View(reviews);
         }
@@ -188,7 +187,6 @@ namespace ElderlyService.Controllers
         {
             var reviews = _db.reviewsForWebsites
                 .Include(r => r.Users)
-                .Where(r => r.status == ReviewsForWebsites.Status.pending)
                 .ToList();
             return View(reviews);
         }
@@ -214,7 +212,7 @@ namespace ElderlyService.Controllers
             var payments = _db.Payments
                 .Include(p=>p.Caregiver)
                 .ThenInclude(c=>c.Users)
-                .Where(p=>p.status == Models.Payment.Status.pending).ToList();
+                .ToList();
             return View(payments);
         }
 

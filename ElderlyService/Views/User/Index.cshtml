@@ -168,7 +168,7 @@
                 @{
                      count = 0;
                 }
-                @foreach (var testimonials in Model.ReviewsForWebsitess.OrderBy(t => t.DateTime))
+                @foreach (var testimonials in Model.ReviewsForWebsitess.OrderByDescending(t => t.DateTime))
                 {
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-5 mb-lg-0">
                         <div class="testimonial text-center">

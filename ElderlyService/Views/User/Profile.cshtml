@@ -127,7 +127,7 @@
                 }
                 @if (Model.Reviews.Any())
                 {
-                    <p class="proile-rating">RANKINGS : <span>@String.Format("{0:F1}", Rank) / 5</span></p>
+                    <p class="proile-rating">RANKINGS : <span>@String.Format("{0:F1}", Rank) / 5.0</span></p>
                 }
                 else
                 {
@@ -168,7 +168,10 @@
                 <a>City: @Model.Users.City</a>
 
                 <p>Personal Information</p>
-                <a>Birth Date: @Model.Users.DateOfBirth</a><br />
+                @{
+                    var date = Model.Users.DateOfBirth.HasValue ? Model.Users.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
+                }
+                <a>Birth Date: @date</a><br />
                 <a>Price for Service: @Model.PriceOfService /hour</a><br />
             </div>
         </div>
@@ -201,8 +204,16 @@
                                     <tbody>
                                         @{
                                             int count = 1;
+
+                                            DateTime currentDate = DateTime.Now;
+                                            DateTime toDate = DateTime.Now.AddDays(7);
+
+                                            var availabilitiesThisWeek = Model.Availabilities
+                                            .Where(a => a.Date >= currentDate && a.Date <= toDate)
+                                            .OrderByDescending(q => q.Date)
+                                            .ToList();
                                         }
-                                        @foreach (var obj in Model.Availabilities.OrderBy(q => q.Date))
+                                        @foreach (var obj in availabilitiesThisWeek)
                                         {
                                             <tr>
                                                 <th scope="row">@count</th>
@@ -236,7 +247,7 @@
                                         @{
                                             count = 1;
                                         }
-                                        @foreach (var obj in Model.Experiences.OrderBy(e => e.EndDate))
+                                        @foreach (var obj in Model.Experiences.OrderByDescending(e => e.EndDate))
                                         {
                                             <tr>
                                                 <th scope="row">@count</th>
@@ -265,7 +276,7 @@
                     <div class="pt-5">
                         <h3 class="mb-5">@Model.Reviews.Count()</h3>
                         <ul class="comment-list">
-                            @foreach (var obj in Model.Reviews.OrderBy(r => r.DateTime))
+                            @foreach (var obj in Model.Reviews.OrderByDescending(r => r.DateTime))
                             {
                                 <li class="comment">
                                     <div class="vcard bio">
@@ -275,7 +286,7 @@
                                         <h3>@obj.Users.FirstName @obj.Users.LastName</h3>
                                         <div class="meta">@obj.DateTime</div>
                                         <p>@obj.Comment</p>
-                                        <p><span>@String.Format("{0:F1}", Rank) / 5</span></p>
+                                        <p><span>@String.Format("{0:F1}", obj.Rate) / 5.0</span></p>
                                     </div>
                                 </li>
                             }

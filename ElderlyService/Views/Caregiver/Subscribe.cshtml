@@ -104,67 +104,70 @@
         <div class="auto-container">
         </div>
     </div>
-    <div class="container">
-    <form class="container" asp-controller="Caregiver" asp-action="Subscribe" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
-        <div class="row gutters" style="margin-top:10px">
-            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="account-settings">
-                            <div class="user-profile">
-                                <div class="user-avatar" style="width: 100%; overflow: hidden;">
-                                    <img src="~/images/visa.png" style="object-fit: cover; width: 100%; min-width: 100%; min-height: 100%;" alt="" />
+    <div class="container mt-auto">
+            <form class="container" asp-controller="Caregiver" asp-action="Subscribe" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
+            <div class="row">
+                <div class="row gutters col-md-4" style="margin-top:10px">
+                    <div class="col-md-12">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="account-settings">
+                                    <div class="user-profile">
+                                        <div class="user-avatar" style="width: 100%; overflow: hidden;">
+                                            <img src="~/images/credit-card-expiry.png" style="object-fit: cover; width: 100%; min-width: 100%; min-height: 100%;" alt="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8" style="padding:0px">
+                    <input name="id" hidden value="@ViewBag.Caregiver.CaregiverId" />
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="row gutters">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <h6 class="mb-2 text-primary">Payment Details</h6>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label asp-for="CardId">Card Number</label>
+                                        <input asp-for="CardId" type="text" class="form-control" id="cardNumber">
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label asp-for="password">Password</label>
+                                        <input asp-for="password" type="password" class="form-control" id="cardName">
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label name="Duration">Duration</label>
+                                        <select style="width:100%" class="form-control" name="Duration">
+                                            <option id="1" value="1">1 Month</option>
+                                            <option id="2" value="2">2 Month</option>
+                                            <option id="3" value="3">3 Month</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="text-right">
+                                        <a asp-controller="User" asp-action="CaregiverProfile" name="submit" style="border-radius:1px" class="btn btn-secondary">Cancel</a>
+
+                                        <button class="btn btn-primary" type="submit">
+                                            Pay Now  <span id="price"></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <input name="id" hidden value="@ViewBag.Caregiver.CaregiverId" />
-        <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12" style="padding:0px">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="row gutters">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <h6 class="mb-2 text-primary">Payment Details</h6>
-                        </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label asp-for="CardId">Card Number</label>
-                                <input asp-for="CardId" type="text" class="form-control" id="cardNumber">
-                            </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label asp-for="password">Password</label>
-                                <input asp-for="password" type="password" class="form-control" id="cardName">
-                            </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                            <div class="form-group">
-                                <label name="Duration">Duration</label>
-                                <select style="width:100%" class="form-select" name="Duration">
-                                    <option id="1" value="1">1 Month</option>
-                                    <option id="2" value="2">2 Month</option>
-                                    <option id="3" value="3">3 Month</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="text-right">
-                                <a asp-controller="User" asp-action="CaregiverProfile" name="submit" style="border-radius:1px" class="btn btn-secondary">Cancel</a>
-
-                                <button class="btn btn-primary" type="submit">
-                                    Pay Now  <span id="price"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+        </form>
+       
     </div>
 
 

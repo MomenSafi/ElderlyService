@@ -49,17 +49,22 @@
                 @{
                     int count = 1;
                 }
+
                 @foreach (var obj in Model)
                 {
+
+                    var dateOfBirth = obj.Users.DateOfBirth.HasValue ? obj.Users.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
+                    var endSubscribe = obj.EndSubscribe.HasValue ? obj.EndSubscribe.Value.ToString("yyyy-MM-dd") : "";
+
                     <tr>
                         <th scope="row">@count</th>
                         <td>@obj.Users.FirstName @obj.Users.LastName</td>
                         <td>@obj.Users.Email</td>
                         <td>@obj.Users.Phone</td>
                         <td>@obj.Users.City</td>
-                        <td>@obj.Users.DateOfBirth</td>
+                        <td>@dateOfBirth</td>
                         <td>@obj.PriceOfService</td>
-                        <td>@obj.EndSubscribe</td>
+                        <td>@endSubscribe</td>
                         @{
                             var name = obj.Service?.Name ?? "No Service";
                         }
