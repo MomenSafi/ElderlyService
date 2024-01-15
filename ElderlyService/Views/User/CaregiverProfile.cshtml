@@ -111,6 +111,19 @@
                 <div class="profile-img">
                     <img src="@Url.Content(Model.Users.ImageUrl)" alt="" />
                 </div>
+                <div class="profile-work">
+                    <p>Contact</p>
+                    <a>Email: @Model.Users.Email</a><br />
+                    <a>Phone: @Model.Users.Phone</a><br />
+                    <a>City: @Model.Users.City</a>
+
+                    <p>Personal Information</p>
+                    @{
+                        var date = Model.Users.DateOfBirth.HasValue ? Model.Users.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
+                    }
+                    <a>Birth Date: @date</a><br />
+                    <a>Price for Service: $@Model.PriceOfService /hour</a><br />
+                </div>
             </div>
             <div class="col-md-6">
                 <div class="profile-head">
@@ -169,19 +182,7 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <div class="profile-work">
-                    <p>Contact</p>
-                    <a>Email: @Model.Users.Email</a><br />
-                    <a>Phone: @Model.Users.Phone</a><br />
-                    <a>City: @Model.Users.City</a>
-
-                    <p>Personal Information</p>
-                    @{
-                        var date = Model.Users.DateOfBirth.HasValue ? Model.Users.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
-                    }
-                    <a>Birth Date: @date</a><br />
-                    <a>Price for Service: $@Model.PriceOfService /hour</a><br />
-                </div>
+                
             </div>
             <div class="col-md-8">
                 <div class="tab-content profile-tab" id="myTabContent">
@@ -271,12 +272,12 @@
                                         </thead>
                                         <tbody>
                                             @{
-                                                count = 1;
+                                                int i = 1;
                                             }
                                             @foreach (var obj in Model.Experiences.OrderByDescending(e => e.EndDate))
                                             {
                                                 <tr>
-                                                    <th scope="row">@count</th>
+                                                    <th scope="row">@i</th>
                                                     <td>@obj.placeOfExperience</td>
                                                     <td>@obj.StartDate.Date.ToString("yyyy-MM")</td>
                                                     <td>@obj.EndDate.Date.ToString("yyyy-MM")</td>
@@ -289,7 +290,7 @@
                                                         </a>
                                                     </td>
                                                 </tr>
-                                                count++;
+                                                i++;
                                             }
                                         </tbody>
                                     </table>
@@ -326,12 +327,12 @@
                 </thead>
                 <tbody>
                     @{
-                       count = 1;
+                       int j = 1;
                     }
                     @foreach (var obj in Model.Appointments.OrderByDescending(a => a.BookingDate))
                     {
                         <tr>
-                            <th scope="row">@count</th>
+                            <th scope="row">@j</th>
                             <td>@obj.Users.FirstName @obj.Users.LastName</td>
                             <td>@obj.Users.Phone</td>
                             <td>@obj.BookingDate.ToString("yyyy-MM-dd")</td>
@@ -402,7 +403,7 @@
                             }
 
                         </tr>
-                        count++;
+                        j++;
                     }
                 </tbody>
             </table>

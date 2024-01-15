@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Available";
 }
-<header>
+<head>
 
     <style>
         .editimg {
@@ -37,15 +37,15 @@
             text-transform: capitalize !important;
             text-align: center;
         }
-
+    </style>
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" >
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" > </script >
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" > </script >
-        <link href="~/profile.css" rel="stylesheet" / >
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" / >
-        <link href="~/editprofile/editprofile.css" rel="stylesheet" / >
-    </style>
-</header>
+        <link href="~/profile.css" rel="stylesheet"  >
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"  >
+        <link href="~/editprofile/editprofile.css" rel="stylesheet"  >
+    
+</head>
 <body>
     <div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
         <div class="auto-container">
@@ -86,9 +86,10 @@
                             <label asp-for="EndTime" class="ms-2"></label>
                             <input asp-for="EndTime" type="time" class="form-control border-0 shadow" />
                             <span asp-validation-for="EndTime" id="endTimeErrorMessage" class="text-danger"></span>
+                            <span id="Time" class="error-message"></span>
                         </div>
 
-                        <div class="row pt-2">
+                        <div class="form-floating py-2 col-12 row">
                             <div class="col-6 col-md-3">
                                 <button type="submit" class="btn btn-primary form-control">Add</button>
                             </div>
@@ -113,15 +114,16 @@
         function validateForm() {
             var startTime = document.getElementById("StartTime").value;
             var endTime = document.getElementById("EndTime").value;
+            
 
-            var endTimeErrorMessage = document.getElementById("endTimeErrorMessage");
+            var endTimeErrorMessage = document.getElementById("Time");
+            endTimeErrorMessage.innerText = "";
 
             if (startTime >= endTime) {
-                endTimeErrorMessage.innerText = "End Time must be after Start Time.";
+                endTimeErrorMessage.innerText = "The End time must be after start time";
                 return false;
             }
 
-            endTimeErrorMessage.innerText = "";
             return true;
         }
     </script>

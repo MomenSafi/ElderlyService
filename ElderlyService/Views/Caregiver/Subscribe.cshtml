@@ -3,7 +3,7 @@
     ViewData["Title"] = "payment";
 }
 
-<header>
+<head>
 
     <style>
         .editimg {
@@ -90,36 +90,28 @@
             content: '\f006';
             font-family: FontAwesome;
         }
-
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" >
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" > </script >
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" > </script >
-        <link href="~/profile.css" rel="stylesheet" / >
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" / >
-        <link href="~/editprofile/editprofile.css" rel="stylesheet" / >
     </style>
-</header>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"> </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>
+    <link href="~/profile.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/editprofile/editprofile.css" rel="stylesheet">
+
+</head>
 <body>
     <div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
         <div class="auto-container">
         </div>
     </div>
     <div class="container mt-auto">
-            <form class="container" asp-controller="Caregiver" asp-action="Subscribe" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
+        <form class="container" asp-controller="Caregiver" asp-action="Subscribe" method="post" onsubmit="return validateForm()" enctype="multipart/form-data">
             <div class="row">
-                <div class="row gutters col-md-4" style="margin-top:10px">
-                    <div class="col-md-12">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="account-settings">
-                                    <div class="user-profile">
-                                        <div class="user-avatar" style="width: 100%; overflow: hidden;">
-                                            <img src="~/images/credit-card-expiry.png" style="object-fit: cover; width: 100%; min-width: 100%; min-height: 100%;" alt="" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-md-4" style="margin-top:10px">
+                    <div class="profile-img">
+
+                        <img src="~/images/credit-card-expiry.png" alt="" />
                     </div>
                 </div>
                 <div class="col-md-8" style="padding:0px">
@@ -167,7 +159,7 @@
                 </div>
             </div>
         </form>
-       
+
     </div>
 
 

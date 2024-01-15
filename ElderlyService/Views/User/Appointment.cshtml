@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Appointment";
 }
-<header>
+<head>
 
     <style>
         .editimg {
@@ -37,15 +37,15 @@
             text-transform: capitalize !important;
             text-align: center;
         }
+    </style>
 
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" >
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" > </script >
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" > </script >
-        <link href="~/profile.css" rel="stylesheet" / >
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" / >
-        <link href="~/editprofile/editprofile.css" rel="stylesheet" / >
-    </style>
-</header>
+        <link href="~/profile.css" rel="stylesheet"  >
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"  >
+        <link href="~/editprofile/editprofile.css" rel="stylesheet"  >
+</head>
 <body>
     <div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
         <div class="auto-container">
@@ -60,7 +60,7 @@
                         <div class="account-settings">
                             <div class="user-profile">
                                 <div class="user-avatar" style="width: 100%; overflow: hidden;">
-                                    <img style="object-fit: cover; width: 100%; min-width: 100%; min-height: 100%;" src="@Url.Content(Model.Users.ImageUrl)" alt="" />
+                                    <img src="@Url.Content(Model.Users.ImageUrl)" alt="" />
                                 </div>
                                 <h5 class="user-name">@Model.Users.FirstName @Model.Users.LastName</h5>
                                 <h6 class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f262a34361f123e27283a3333713c3032">@Model.Users.Email</a></h6>
@@ -111,7 +111,7 @@
                         <div class="row gutters">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                 <div class="text-right">
-                                    <a asp-controller="User" asp-action="Profile" name="submit" style="border-radius:1px" class="btn btn-secondary">Cancel</a>
+                                        <a asp-controller="User" asp-action="Profile" asp-route-id="@Model.CaregiverId" name="submit" style="border-radius:1px" class="btn btn-secondary">Cancel</a>
                                     <button asp-controller="User" asp-action="Appointment" type="submit" id="submit" style="border-radius:1px" name="submit" class="btn btn-primary">Appointment</button>
                                 </div>
                             </div>

@@ -244,6 +244,7 @@ namespace ElderlyService.Controllers
             }
             user.Password = thisuser.Password;
             user.RoleId = thisuser.RoleId;
+            user.Email = thisuser.Email;
             _db.Users.Update(user);
             _db.SaveChanges();
             user.ImageFile = null;

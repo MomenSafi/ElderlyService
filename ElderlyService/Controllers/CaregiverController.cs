@@ -76,6 +76,7 @@ namespace ElderlyService.Controllers
             }
             caregiver.Users.Password = user.Password;
             caregiver.Users.RoleId = user.RoleId;
+            caregiver.Users.Email = user.Email;
             _db.Users.Update(caregiver.Users);
             _db.SaveChanges();
             caregiver.Users.ImageFile = null;
@@ -244,7 +245,13 @@ namespace ElderlyService.Controllers
 
         public IActionResult Subscribe(string id)
         {
-            var caregiver = _db.Caregivers.Find(id);
+            var caregiver = _db.Caregivers.Include(c=>c.Service).FirstOrDefault(c=>c.CaregiverId == id);
+                
+            if(caregiver.ServiceId == null)
+            {
+                TempData["info"] = "You must edit Your Profile and Add service";
+                return RedirectToAction("CaregiverProfile", "User");
+            }
             ViewBag.Caregiver = caregiver;
             return View();
         }

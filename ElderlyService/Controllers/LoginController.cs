@@ -2,6 +2,7 @@
 using ElderlyService.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using BCrypt.Net;
 using System;
 
 namespace ElderlyService.Controllers
@@ -28,7 +29,7 @@ namespace ElderlyService.Controllers
             {
                 if (u.Email.ToLower() == user.Email.ToLower())
                 {
-                    if (u.Password == user.Password)
+                    if (BCrypt.Net.BCrypt.Verify(user.Password, u.Password))
                     {
                         string userJson = JsonConvert.SerializeObject(u);
                         HttpContext.Session.SetString("LiveUser", userJson);
@@ -62,6 +63,8 @@ namespace ElderlyService.Controllers
                 TempData["error"] = "This Email is registered, please Login";
                 return RedirectToAction("LogIn");
             }
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            user.Password = hashedPassword;
 
             string userJson = JsonConvert.SerializeObject(user);
             HttpContext.Session.SetString("LiveUser", userJson);
@@ -69,6 +72,9 @@ namespace ElderlyService.Controllers
             // Set common properties
             user.RoleId = isCaregiver ? "2" : "3";
             user.userId = Guid.NewGuid().ToString();
+
+           
+
 
             // Add user to the database
             _db.Users.Add(user);

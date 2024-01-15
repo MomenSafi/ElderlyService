@@ -8,7 +8,13 @@
 }
 
 .error-message {
-    color: #ff0000; /* Red color for error messages */
+    color: #ff0000 !important; 
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+span .error-message {
+    color: #ff0000 !important;
     font-size: 14px;
     margin-top: 5px;
 }

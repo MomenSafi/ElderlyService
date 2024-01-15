@@ -36,6 +36,7 @@
             text-transform: capitalize !important;
             text-align: center;
         }
+
     </style>
 </head>
 <div class="slide-item editimg overlay" style="background-image: url('@Url.Content("~/images/slider-4.jpg")')">
@@ -129,24 +130,30 @@
                 <p>"Discover the diverse expertise within our exceptional team, blending talents in health care for elderly. Together, we are dedicated to providing comprehensive and compassionate care for your well-being."</p>
             </div>
         </div>
-        <div class="row">
+        <div class="row justify-content-center">
             @foreach (var topCaregiver in Model)
             {
-                <div class="col-lg-3">
-                    <div class="team text-center">
-                        <a asp-action="Profile" asp-route-id="@topCaregiver.CaregiverId" class="d-block"><img src="@Url.Content(topCaregiver.Users.ImageUrl)" alt="" class="img-fluid"></a>
-                        <h3>@topCaregiver.Users.FirstName @topCaregiver.Users.LastName</h3>
-                        <span class="position d-block">@topCaregiver.Service.Name</span>
-                        <p>@topCaregiver.AboutYou</p>
+                <div class="col-lg-3 mb-4">
+                    <div class="card d-flex flex-column h-100">
+                        <a asp-action="Profile" asp-route-id="@topCaregiver.CaregiverId">
+                            <img src="@Url.Content(topCaregiver.Users.ImageUrl)" alt="" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;">
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@topCaregiver.Users.FirstName @topCaregiver.Users.LastName</h5>
+                            <p class="card-text">@topCaregiver.Service.Name</p>
+                        </div>
                     </div>
                 </div>
                 count++;
-                if (count == 3)
+                if (count == 4)
                 {
                     break;
                 }
             }
+            
         </div>
+
+
     </div>
 </div>
 

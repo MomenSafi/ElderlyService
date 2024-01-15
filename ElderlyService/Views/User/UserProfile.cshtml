@@ -57,6 +57,18 @@
                 <div class="profile-img">
                     <img src="@Url.Content(Model.ImageUrl)" alt="img" />
                 </div>
+                <div class="profile-work">
+                    <p>Contact</p>
+                    <a>Email: @Model.Email</a><br />
+                    <a>Phone: @Model.Phone</a><br />
+                    <a>City: @Model.City</a>
+
+                    <p>Personal Information</p>
+                    @{
+                        var date = Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
+                    }
+                    <a>Birth Date: @date</a><br />
+                </div>
             </div>
             <div class="col-md-8">
                 <div class="profile-head">
@@ -129,18 +141,7 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <div class="profile-work">
-                    <p>Contact</p>
-                    <a>Email: @Model.Email</a><br />
-                    <a>Phone: @Model.Phone</a><br />
-                    <a>City: @Model.City</a>
-
-                    <p>Personal Information</p>
-                    @{
-                        var date = Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
-                    }
-                    <a>Birth Date: @date</a><br />
-                </div>
+                
             </div>
         </div>
     </form>
