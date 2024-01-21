@@ -54,7 +54,10 @@
                         <td>@obj.Email</td>
                         <td>@obj.Phone</td>
                         <td>@obj.City</td>
-                        <td>@obj.DateOfBirth</td>                        
+                        @{
+                            var date = obj.DateOfBirth.HasValue ? obj.DateOfBirth.Value.ToString("yyyy-MM-dd") : "";
+                        }
+                        <td>@date</td>                        
                     </tr>
                     count++;
                 }

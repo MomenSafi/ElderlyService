@@ -91,6 +91,14 @@
             content: '\f006';
             font-family: FontAwesome;
         }
+
+        .editTestomonialImg {
+            width: 80px !important;
+            border-radius: 50% !important;
+            margin-bottom: 30px !important;
+            margin-top: -25px !important;
+            display: initial !important;
+        }
     </style>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -125,188 +133,196 @@
                     <a>Price for Service: $@Model.PriceOfService /hour</a><br />
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="profile-head">
-                    <h5>
-                        @Model.Users.FirstName @Model.Users.LastName
-                    </h5>
-                    @{
-                        var name = Model.Service != null ? @Model.Service.Name : "No Service";
+            <div class="col-md 8">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="profile-head">
+                            <h5>
+                                @Model.Users.FirstName @Model.Users.LastName
+                            </h5>
+                            @{
+                                var name = Model.Service != null ? @Model.Service.Name : "No Service";
 
-                    }
-                    <h6>
-                        @name
-                    </h6>
-                    @if (Model.Reviews.Any())
-                    {
-                        <p class="proile-rating">RANKINGS : <span>@String.Format("{0:F1}", Rank) / 5.0</span></p>
-                    }
-                    else
-                    {
-                        <p class="proile-rating">RANKINGS : <span>No reviews yet.</span></p>
+                            }
+                            <h6>
+                                @name
+                            </h6>
+                            @if (Model.Reviews.Any())
+                            {
+                                <p class="proile-rating">RANKINGS : <span>@String.Format("{0:F1}", Rank) / 5.0</span></p>
+                            }
+                            else
+                            {
+                                <p class="proile-rating">RANKINGS : <span>No reviews yet.</span></p>
 
-                    }
+                            }
 
-                    @{
-                        var end = Model.EndSubscribe.HasValue ? Model.EndSubscribe.Value.ToString("yyyy-MM-dd") : "";
-                    }
-                    @if(end == "")
-                    {
-                        <p class="proile-rating">Your account is not active</p>
-                    }
-                    else
-                    {
-                        <p class="proile-rating">Your account is active to @end</p>
-                    }
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Main Information</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Availability</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="exper-tab" data-toggle="tab" href="#exper" role="tab" aria-controls="exper" aria-selected="false">Experience</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <a asp-controller="Caregiver" asp-action="EditProfile" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
-                    Edit Profile
-                </a>
-                <a asp-controller="Caregiver" asp-action="Subscribe" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
-                    Active Your Account
-                </a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                
-            </div>
-            <div class="col-md-8">
-                <div class="tab-content profile-tab" id="myTabContent">
-                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label>Description</label>
-                            </div>
-                            <div class="col-md-12">
-                                <p>@Model.AboutYou</p>
-                            </div>
-
+                            @{
+                                var end = Model.EndSubscribe.HasValue ? Model.EndSubscribe.Value.ToString("yyyy-MM-dd") : "";
+                            }
+                            @if (end == "")
+                            {
+                                <p class="proile-rating">Your account is not active</p>
+                            }
+                            else
+                            {
+                                <p class="proile-rating">Your account is active to @end</p>
+                            }
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Main Information</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Availability</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="exper-tab" data-toggle="tab" href="#exper" role="tab" aria-controls="exper" aria-selected="false">Experience</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <div class="col-12">
-                            <div class="rounded h-100 p-4">
-                                <h6 class="mb-4">Availability</h6>
-                                <a asp-controller="Caregiver" asp-action="AddAvailability" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
-                                    Add available Time
-                                </a>
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Day of week</th>
-                                                <th scope="col">From</th>
-                                                <th scope="col">To</th>
-                                                <th scope="col">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @{
-                                                int count = 1;
+                    <div class="col-md-3">
+                        <a asp-controller="Caregiver" asp-action="EditProfile" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
+                            Edit Profile
+                        </a>
+                        <a asp-controller="Caregiver" asp-action="Subscribe" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
+                            Active Your Account
+                        </a>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="tab-content profile-tab" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Description</label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p>@Model.AboutYou</p>
+                                    </div>
 
-                                                DateTime currentDate = DateTime.Now;
-                                                DateTime toDate = DateTime.Now.AddDays(7);
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                <div class="col-12">
+                                    <div class="rounded h-100 p-4">
+                                        <h6 class="mb-4">Availability</h6>
+                                        <a asp-controller="Caregiver" asp-action="AddAvailability" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
+                                            Add available Time
+                                        </a>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Day of week</th>
+                                                        <th scope="col">From</th>
+                                                        <th scope="col">To</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        int count = 1;
 
-                                                var availabilitiesThisWeek = Model.Availabilities
-                                                .Where(a => a.Date >= currentDate && a.Date <= toDate)
-                                                .OrderByDescending(q => q.Date)
-                                                .ToList();
-                                            }
+                                                        DateTime currentDate = DateTime.Now;
+                                                        DateTime toDate = DateTime.Now.AddDays(7);
 
-                                            @foreach (var obj in availabilitiesThisWeek)
-                                            {
-                                                <tr>
-                                                    <th scope="row">@count</th>
-                                                    <td>@obj.DayOfWeek</td>
-                                                    <td>@obj.StartTime.TimeOfDay</td>
-                                                    <td>@obj.EndTime.TimeOfDay</td>
-                                                    <td>
-                                                        <a asp-controller="Caregiver" asp-action="EditAvailable" asp-route-id="@obj.AvailabilityID" class="btn btn-primary mx-2">
-                                                            <i class="bi bi-pencil-square"></i> Edit
-                                                        </a>
-                                                        <a data-id="@obj.AvailabilityID" class="btn btn-danger mx-2 DeleteAvailable">
-                                                            <i class="bi bi-trash-fill"></i> Delete
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                count++;
-                                            }
-                                        </tbody>
-                                    </table>
+                                                        var availabilitiesThisWeek = Model.Availabilities
+                                                        .Where(a => a.Date >= currentDate && a.Date <= toDate)
+                                                        .OrderByDescending(q => q.Date)
+                                                        .ToList();
+                                                    }
+
+                                                    @foreach (var obj in availabilitiesThisWeek)
+                                                    {
+                                                        <tr>
+                                                            <th scope="row">@count</th>
+                                                            <td>@obj.DayOfWeek</td>
+                                                            <td>@obj.StartTime.TimeOfDay</td>
+                                                            <td>@obj.EndTime.TimeOfDay</td>
+                                                            <td>
+                                                                <a asp-controller="Caregiver" asp-action="EditAvailable" asp-route-id="@obj.AvailabilityID" class="btn btn-primary mx-2">
+                                                                    <i class="bi bi-pencil-square"></i> Edit
+                                                                </a>
+                                                                <a data-id="@obj.AvailabilityID" class="btn btn-danger mx-2 DeleteAvailable">
+                                                                    <i class="bi bi-trash-fill"></i> Delete
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        count++;
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="exper" role="tabpanel" aria-labelledby="exper-tab">
+                                <div class="col-12">
+                                    <div class="rounded h-100 p-4">
+                                        <h6 class="mb-4">Experience</h6>
+                                        <a asp-controller="Caregiver" asp-action="AddExperience" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
+                                            Add Experience
+                                        </a>
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">place of work</th>
+                                                        <th scope="col">From</th>
+                                                        <th scope="col">To</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        int i = 1;
+                                                    }
+                                                    @foreach (var obj in Model.Experiences.OrderByDescending(e => e.EndDate))
+                                                    {
+                                                        <tr>
+                                                            <th scope="row">@i</th>
+                                                            <td>@obj.placeOfExperience</td>
+                                                            <td>@obj.StartDate.Date.ToString("yyyy-MM")</td>
+                                                            <td>@obj.EndDate.Date.ToString("yyyy-MM")</td>
+                                                            <td>
+                                                                <a asp-controller="Caregiver" asp-action="EditExperiences" asp-route-id="@obj.ExperienceId" class="btn btn-primary mx-2">
+                                                                    <i class="bi bi-pencil-square"></i> Edit
+                                                                </a>
+                                                                <a data-id="@obj.ExperienceId" class="btn btn-danger mx-2 DeleteExperiences">
+                                                                    <i class="bi bi-trash-fill"></i> Delete
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        i++;
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="exper" role="tabpanel" aria-labelledby="exper-tab">
-                        <div class="col-12">
-                            <div class="rounded h-100 p-4">
-                                <h6 class="mb-4">Experience</h6>
-                                <a asp-controller="Caregiver" asp-action="AddExperience" asp-route-id="@Model.CaregiverId" class="btn btn-primary" style="margin:5px">
-                                    Add Experience
-                                </a>
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">place of work</th>
-                                                <th scope="col">From</th>
-                                                <th scope="col">To</th>
-                                                <th scope="col">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @{
-                                                int i = 1;
-                                            }
-                                            @foreach (var obj in Model.Experiences.OrderByDescending(e => e.EndDate))
-                                            {
-                                                <tr>
-                                                    <th scope="row">@i</th>
-                                                    <td>@obj.placeOfExperience</td>
-                                                    <td>@obj.StartDate.Date.ToString("yyyy-MM")</td>
-                                                    <td>@obj.EndDate.Date.ToString("yyyy-MM")</td>
-                                                    <td>
-                                                        <a asp-controller="Caregiver" asp-action="EditExperiences" asp-route-id="@obj.ExperienceId" class="btn btn-primary mx-2">
-                                                            <i class="bi bi-pencil-square"></i> Edit
-                                                        </a>
-                                                        <a data-id="@obj.ExperienceId" class="btn btn-danger mx-2 DeleteExperiences">
-                                                            <i class="bi bi-trash-fill"></i> Delete
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                i++;
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
+
     </form>
 </div>
 <div class="site-section" style="padding:0px">
     <div class="container">
         <div class="col-md-12">
             <label>Appointment</label>
+        </div>
+        <div class="input-group">
+            <form method="post">
+                <div class="input-group">
+                    <input name="SearchItem" type="search" class="form-control rounded m-1" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                    <button asp-action="CaregiverProfile" type="submit" class="btn btn-outline-primary m-1" data-mdb-ripple-init>search</button>
+                </div>
+            </form>
         </div>
         <div class="table-responsive">
             <table class="table">
@@ -327,7 +343,7 @@
                 </thead>
                 <tbody>
                     @{
-                       int j = 1;
+                        int j = 1;
                     }
                     @foreach (var obj in Model.Appointments.OrderByDescending(a => a.BookingDate))
                     {
@@ -336,24 +352,24 @@
                             <td>@obj.Users.FirstName @obj.Users.LastName</td>
                             <td>@obj.Users.Phone</td>
                             <td>@obj.BookingDate.ToString("yyyy-MM-dd")</td>
-                            <td>@obj.StartTime.TimeOfDay</td>
-                            <td>@obj.EndTime.TimeOfDay</td>
+                            <td>@obj.StartTime.ToString("HH:mm")</td>
+                            <td>@obj.EndTime.ToString("HH:mm")</td>
                             <td>
                                 <a href="@obj.Location" target="_blank">
                                     Location
                                 </a>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#notes">
+                                <button type="button" class="btn btn-primary btn-sm modal-trigger-button" data-appointment-id="@obj.AppointmentId">
                                     View Notes
                                 </button>
 
                                 <!-- Notes Modal -->
-                                <div class="modal fade" id="notes" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="notes-@obj.AppointmentId" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="notesModalLabel">Appointment Notes</h5>
+                                                <h5 class="modal-title" id="notesModalLabel">Notes</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -371,9 +387,9 @@
                             @{
                                 var available = Model.Availabilities.Where(a => a.Date == obj.BookingDate).ToList();
                                 var availablebool = false;
-                                foreach(var item in available)
+                                foreach (var item in available)
                                 {
-                                    if(obj.StartTime.TimeOfDay >= item.StartTime.TimeOfDay && item.EndTime.TimeOfDay >= obj.EndTime.TimeOfDay)
+                                    if (obj.StartTime.TimeOfDay >= item.StartTime.TimeOfDay && item.EndTime.TimeOfDay >= obj.EndTime.TimeOfDay)
                                     {
                                         availablebool = true;
                                         break;
@@ -386,19 +402,22 @@
                             {
                                 @if (availablebool)
                                 {
-                                    <td>You Available</td>
+                                    <td>Available</td>
                                 }
                                 else
                                 {
-                                    <td>You are Not Available</td>
+                                    <td>Not Available</td>
                                 }
                                 <td>
-                                    <a asp-controller="Caregiver" asp-action="ApproveAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-primary mx-2">
-                                        <i class="bi bi-check"></i> Approve
-                                    </a>
-                                    <a asp-controller="Caregiver" asp-action="RejectAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-danger mx-2">
-                                        <i class="bi bi-x"></i> Reject
-                                    </a>
+                                    <div class="btn-group btn-group-toggle">
+                                        <a asp-controller="Caregiver" asp-action="ApproveAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-primary mx-2">
+                                            <i class="bi bi-check"></i>
+                                        </a>
+
+                                        <a asp-controller="Caregiver" asp-action="RejectAppointment" asp-route-id="@obj.AppointmentId" class="btn btn-danger mx-2">
+                                            <i class="bi bi-x"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             }
 
@@ -410,30 +429,39 @@
         </div>
     </div>
 </div>
-<div class="site-section">
+<div class="site-section bg-light">
     <div class="container">
         <div class="row">
-            <div class="col-md-8 blog-content">
-                <div class="row mb-5">
-                    <div class="pt-5">
-                        <ul class="comment-list">
-                            @foreach (var obj in Model.Reviews.OrderByDescending(r => r.DateTime))
-                            {
-                                <li class="comment">
-                                    <div class="vcard bio">
-                                        <img src="@Url.Content(obj.Users.ImageUrl)" alt="">
-                                    </div>
-                                    <div class="comment-body">
-                                        <h3>@obj.Users.FirstName @obj.Users.LastName</h3>
-                                        <div class="meta">@obj.DateTime</div>
-                                        <p>@obj.Comment</p>
-                                        <p><span>@String.Format("{0:F1}", obj.Rate) / 5.0</span></p>
-                                    </div>
-                                </li>
-                            }
-                        </ul>
+            <div class="owl-carousel owl-theme">
+                @{
+                    var pageSize = 6;
+                    var page = 1;
+                    var reviews = Model.Reviews.OrderByDescending(t => t.DateTime).Skip((page - 1) * pageSize).Take(pageSize);
+                }
+
+                @foreach (var obj in reviews)
+                {
+                    <div class="item">
+                        <div>
+                            <div class="testimonial text-center" style="margin:5px">
+                                <img src="@Url.Content(obj.Users.ImageUrl)" alt="Image" class="img-fluid editTestomonialImg">
+                                <p><span>Rating: @String.Format("{0:F0}", obj.Rate)</span></p>
+
+                                <blockquote>
+                                    <p class="quote">@obj.Comment</p>
+                                    <cite class="author">@obj.Users.FirstName @obj.Users.LastName</cite>
+                                    <div class="meta">@obj.DateTime</div>
+
+                                </blockquote>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                }
+            </div>
+            <div class="owl-nav mx-auto">
+                <i class="bi bi-circle owl-prev"></i>
+                <i class="bi bi-circle owl-play-pause" hidden></i>
+                <i class="bi bi-circle owl-next"></i>
             </div>
         </div>
     </div>
@@ -441,45 +469,85 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    $('.DeleteAvailable').on('click', function () {
-        var id = $(this).data('id');
-        console.log(id);
-        console.log('DeleteAvailable ID:', id);
+    $(document).ready(function () {
 
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // User clicked Yes, handle the deletion here
-                window.location.href = '@Url.Action("DeleteAvailable", "Caregiver")' + '?id=' + id;
-            }
+        $('.DeleteAvailable').on('click', function () {
+            var id = $(this).data('id');
+            console.log(id);
+            console.log('DeleteAvailable ID:', id);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User clicked Yes, handle the deletion here
+                    window.location.href = '@Url.Action("DeleteAvailable", "Caregiver")' + '?id=' + id;
+                }
+            });
+        });
+
+        $('.DeleteExperiences').on('click', function () {
+            var id = $(this).data('id');
+            console.log(id);
+            console.log('DeleteExperiences ID:', id);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User clicked Yes, handle the deletion here
+                    window.location.href = '@Url.Action("DeleteExperiences", "Caregiver")' + '?id=' + id;
+                }
+            });
+        });
+        $('.modal-trigger-button').on('click', function () {
+            var appointmentId = $(this).data('appointment-id');
+            console.log('Modal Trigger ID:', appointmentId);
+
+            // Trigger the modal with the unique ID
+            $('#notes-' + appointmentId).modal('show');
         });
     });
 
-    $('.DeleteExperiences').on('click', function () {
-        var id = $(this).data('id');
-        console.log(id);
-        console.log('DeleteExperiences ID:', id);
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // User clicked Yes, handle the deletion here
-                window.location.href = '@Url.Action("DeleteExperiences", "Caregiver")' + '?id=' + id;
+    $(document).ready(function () {
+        var owl = $(".owl-carousel").owlCarousel({
+            items: 3,
+            loop: true,
+            autoplay: true,
+            autoplayHoverPause: true,
+            nav: false,
+            dots: false,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 3
+                }
             }
         });
+
+        // Custom navigation controls
+        $(".owl-prev").click(function () {
+            owl.trigger("prev.owl.carousel");
+        });
+
+        $(".owl-next").click(function () {
+            owl.trigger("next.owl.carousel");
+        });
+
+
     });
 </script>

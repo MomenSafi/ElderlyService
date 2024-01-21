@@ -3,6 +3,7 @@ using ElderlyService.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
 
 namespace ElderlyService.Controllers
 {
@@ -17,6 +18,18 @@ namespace ElderlyService.Controllers
         }
         public IActionResult Dashboard()
         {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("Dashboard", "Admin");
+                return RedirectToAction("LogIn", "Login");
+            }
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if (user.RoleId != "1")
+            {
+                return RedirectToAction("Index", "User");
+            }
             ViewBag.ProfessionalCaregiver = _db.Caregivers.Count();
             ViewBag.UserUseWebsite = _db.Users.Count(r => r.RoleId == "3");
             ViewBag.AppointmentApproved = _db.Appointments.Count(a => a.status == Models.Appointment.Status.Approved);
@@ -36,12 +49,36 @@ namespace ElderlyService.Controllers
 
         public IActionResult Service()
         {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("Service", "Admin");
+                return RedirectToAction("LogIn", "Login");
+            }
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if (user.RoleId != "1")
+            {
+                return RedirectToAction("Index", "User");
+            }
             var service = _db.services.ToList();
             return View(service);
         }
 
         public IActionResult AddService()
         {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("Service", "Admin");
+                return RedirectToAction("LogIn", "Login");
+            }
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if (user.RoleId != "1")
+            {
+                return RedirectToAction("Index", "User");
+            }
             return View();
         }
         [HttpPost]
@@ -66,6 +103,18 @@ namespace ElderlyService.Controllers
 
         public IActionResult EditService(int? id)
         {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("Service", "Admin");
+                return RedirectToAction("LogIn", "Login");
+            }
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if (user.RoleId != "1")
+            {
+                return RedirectToAction("Index", "User");
+            }
             var service = _db.services.Find(id);
             return View(service);
         }
@@ -103,6 +152,18 @@ namespace ElderlyService.Controllers
         // users
         public IActionResult Users()
         {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("Users", "Admin");
+                return RedirectToAction("LogIn", "Login");
+            }
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if (user.RoleId != "1")
+            {
+                return RedirectToAction("Index", "User");
+            }
             var users = _db.Users
                 .Where(u=>u.RoleId == "3")
                 .ToList();
@@ -111,7 +172,8 @@ namespace ElderlyService.Controllers
         [HttpPost]
         public IActionResult Users(string SearchItem)
         {
-            if(string.IsNullOrEmpty(SearchItem))
+
+            if(!string.IsNullOrEmpty(SearchItem))
             {
                 List<Users> Search = _db.Users.Where(u=>u.FirstName.Contains(SearchItem) || u.LastName.Contains(SearchItem)).ToList();
                 return View(Search);
@@ -127,6 +189,18 @@ namespace ElderlyService.Controllers
 
         public IActionResult Caregiver()
         {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("Caregiver", "Admin");
+                return RedirectToAction("LogIn", "Login");
+            }
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if (user.RoleId != "1")
+            {
+                return RedirectToAction("Index", "User");
+            }
             var Caregivers = _db.Caregivers
                 .Include(c=>c.Users)
                 .Where(c=>c.Users.RoleId == "2")
@@ -137,7 +211,7 @@ namespace ElderlyService.Controllers
         [HttpPost]
         public IActionResult Caregiver(string SearchItem)
         {
-            if (string.IsNullOrEmpty(SearchItem))
+            if (!string.IsNullOrEmpty(SearchItem))
             {
                 List<Caregiver> Search = _db.Caregivers.Where(c => c.Users.FirstName.Contains(SearchItem) || c.Users.LastName.Contains(SearchItem))
                     .Include(c=>c.Users)
@@ -157,6 +231,18 @@ namespace ElderlyService.Controllers
         // Review
         public IActionResult Review() 
         {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("Review", "Admin");
+                return RedirectToAction("LogIn", "Login");
+            }
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if (user.RoleId != "1")
+            {
+                return RedirectToAction("Index", "User");
+            }
             var reviews = _db.Reviews
                 .Include(r=>r.Users)
                 .Include(r=>r.Caregiver)
@@ -185,6 +271,18 @@ namespace ElderlyService.Controllers
         // Testimonials
         public IActionResult Testimonials()
         {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("Testimonials", "Admin");
+                return RedirectToAction("LogIn", "Login");
+            }
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if (user.RoleId != "1")
+            {
+                return RedirectToAction("Index", "User");
+            }
             var reviews = _db.reviewsForWebsites
                 .Include(r => r.Users)
                 .ToList();
@@ -209,6 +307,18 @@ namespace ElderlyService.Controllers
 
         public IActionResult Payment()
         {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("Payment", "Admin");
+                return RedirectToAction("LogIn", "Login");
+            }
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
+            if (user.RoleId != "1")
+            {
+                return RedirectToAction("Index", "User");
+            }
             var payments = _db.Payments
                 .Include(p=>p.Caregiver)
                 .ThenInclude(c=>c.Users)

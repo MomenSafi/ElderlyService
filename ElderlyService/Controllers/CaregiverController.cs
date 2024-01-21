@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using static ElderlyService.Models.Availability;
+using ElderlyService.SendEmails;
+
 
 namespace ElderlyService.Controllers
 {
@@ -14,10 +16,13 @@ namespace ElderlyService.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public CaregiverController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+        private readonly IEmailService _emailService;
+
+        public CaregiverController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailService emailService)
         {
             _db = db;
             this.webHostEnvironment = webHostEnvironment;
+            _emailService = emailService;
         }
 
         static DateTime GetDateForDayOfWeek(Days targetDay)
@@ -276,17 +281,24 @@ namespace ElderlyService.Controllers
             TempData["error"] = "Your CardId or Password is wrong";
             return RedirectToAction("Subscribe", new { id });
         }
-        public IActionResult RejectAppointment(int id)
+        public async Task<IActionResult> RejectAppointment(int id)
         {
             var appointment = _db.Appointments.Find(id);
             appointment.status = Appointment.Status.Rejected;
             _db.Appointments.Update(appointment);
             _db.SaveChanges();
             TempData["success"] = "this appointment rejected successfully";
+            var user = _db.Users
+                .Where(u => u.userId == appointment.userId).FirstOrDefault();
+            string userEmail = user.Email;
+            string subject = "Appointment Request";
+            string body = "A new appointment has been reject";
+
+            await _emailService.SendEmailAsync(userEmail, subject, body);
             return RedirectToAction("CaregiverProfile", "User");
 
         }
-        public IActionResult ApproveAppointment(int id)
+        public async Task<IActionResult> ApproveAppointment(int id)
         {
             var appointment = _db.Appointments.Find(id);
             appointment.status = Appointment.Status.Approved;
@@ -321,6 +333,13 @@ namespace ElderlyService.Controllers
                 }
             }
             TempData["success"] = "this appointment approved successfully";
+            var user = _db.Users
+                .Where(u => u.userId == appointment.userId).FirstOrDefault();
+            string userEmail = user.Email;
+            string subject = "Appointment Request";
+            string body = "A new appointment has been Approve";
+
+            await _emailService.SendEmailAsync(userEmail, subject, body);
             return RedirectToAction("CaregiverProfile", "User");
         }
     }

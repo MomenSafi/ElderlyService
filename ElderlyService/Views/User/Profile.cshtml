@@ -89,6 +89,14 @@
             content: '\f006';
             font-family: FontAwesome;
         }
+
+        .editTestomonialImg {
+            width: 80px !important;
+            border-radius: 50% !important;
+            margin-bottom: 30px !important;
+            margin-top: -25px !important;
+            display: initial !important;
+        }
     </style>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -108,7 +116,7 @@
         <div class="col-md-4">
             <div class="profile-img">
                 <img src="@Url.Content(Model.Users.ImageUrl)" alt="img" />
-                
+
             </div>
         </div>
         <div class="col-md-6">
@@ -269,78 +277,133 @@
     </div>
 </div>
 
-<div class="site-section">
+<div class="site-section bg-light">
     <div class="container">
         <div class="row">
-            <div class="col-md-8 blog-content">
-                <div class="row mb-5">
-                    <div class="pt-5">
-                        <h3 class="mb-5">@Model.Reviews.Count()</h3>
-                        <ul class="comment-list">
-                            @foreach (var obj in Model.Reviews.OrderByDescending(r => r.DateTime))
-                            {
-                                <li class="comment">
-                                    <div class="vcard bio">
-                                        <img src="@obj.Users.ImageUrl" alt="">
-                                    </div>
-                                    <div class="comment-body">
-                                        <h3>@obj.Users.FirstName @obj.Users.LastName</h3>
-                                        <div class="meta">@obj.DateTime</div>
-                                        <p>@obj.Comment</p>
-                                        <p><span>@String.Format("{0:F1}", obj.Rate) / 5.0</span></p>
-                                    </div>
-                                </li>
-                            }
-                        </ul>
-                        <!-- END comment-list -->
-                        @if (!string.IsNullOrEmpty(liveUser))
-                        {
-                            var user = JsonConvert.DeserializeObject<Users>(liveUser);
-                            if (user.RoleId == "3")
-                            {
-                                <div class="comment-form-wrap pt-5">
-                                    <h3 class="mb-5">Leave a comment</h3>
-                                    <form asp-action="AddReview" class="p-5 bg-light">
-                                        <input name="Id" value="@Model.CaregiverId" hidden />
-                                        <div class="form-group">
-                                            <label name="message">Message</label>
-                                            <textarea name="message" id="message" cols="30" rows="10" class="form-control"></textarea>
-                                        </div>
-                                        <div class="container d-flex justify-content-center mt-200">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="stars">
-                                                        <input class="star star-5" id="star-5" type="radio" name="Rate" value="5" />
-                                                        <label class="star star-5" for="star-5"></label>
+            <div class="owl-carousel owl-theme">
+                @{
+                    var pageSize = 6;
+                    var page = 1;
+                    var reviews = Model.Reviews.OrderByDescending(t => t.DateTime).Skip((page - 1) * pageSize).Take(pageSize);
+                }
 
-                                                        <input class="star star-4" id="star-4" type="radio" name="Rate" value="4" />
-                                                        <label class="star star-4" for="star-4"></label>
+                @foreach (var obj in reviews)
+                {
+                    <div class="item">
+                        <div>
+                            <div class="testimonial text-center" style="margin:5px">
+                                <img src="@Url.Content(obj.Users.ImageUrl)" alt="Image" class="img-fluid editTestomonialImg">
+                                <p><span>Rating: @String.Format("{0:F0}", obj.Rate)</span></p>
 
-                                                        <input class="star star-3" id="star-3" type="radio" name="Rate" value="3" />
-                                                        <label class="star star-3" for="star-3"></label>
+                                <blockquote>
+                                    <p class="quote">@obj.Comment</p>
+                                    <cite class="author">@obj.Users.FirstName @obj.Users.LastName</cite>
+                                    <div class="meta">@obj.DateTime</div>
 
-                                                        <input class="star star-2" id="star-2" type="radio" name="Rate" value="2" />
-                                                        <label class="star star-2" for="star-2"></label>
-
-                                                        <input class="star star-1" id="star-1" type="radio" name="Rate" value="1" />
-                                                        <label class="star star-1" for="star-1"></label>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="submit" value="Post Comment" class="btn btn-primary">
-                                        </div>
-                                    </form>
-                                </div>
-                            }
-                        }
+                                </blockquote>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                }
+            </div>
+            <div class="owl-nav mx-auto">
+                <i class="bi bi-circle owl-prev"></i>
+                <i class="bi bi-circle owl-play-pause" hidden></i>
+                <i class="bi bi-circle owl-next"></i>
             </div>
         </div>
     </div>
 </div>
+@*
+    add feedback
+*@
+
+@if (!string.IsNullOrEmpty(liveUser))
+{
+    var user = JsonConvert.DeserializeObject<Users>(liveUser);
+    if (user.RoleId == "3")
+    {
+        <div class="site-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mb-5">
+                        <form asp-action="AddReview">
+                            <input name="Id" value="@Model.CaregiverId" hidden />
+
+                            <div class="row form-group">
+                                <div class="col-md-12">
+                                    <label class="text-black" for="message">Message</label>
+                                    <textarea name="message" id="message" cols="30" rows="7" class="form-control" placeholder="Write your Testimonial..."></textarea>
+                                </div>
+                            </div>
+                            <div class="container d-flex justify-content-center mt-200">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="stars">
+                                            <input class="star star-5" id="star-5" type="radio" name="Rate" value="5" />
+                                            <label class="star star-5" for="star-5"></label>
+
+                                            <input class="star star-4" id="star-4" type="radio" name="Rate" value="4" />
+                                            <label class="star star-4" for="star-4"></label>
+
+                                            <input class="star star-3" id="star-3" type="radio" name="Rate" value="3" />
+                                            <label class="star star-3" for="star-3"></label>
+
+                                            <input class="star star-2" id="star-2" type="radio" name="Rate" value="2" />
+                                            <label class="star star-2" for="star-2"></label>
+
+                                            <input class="star star-1" id="star-1" type="radio" name="Rate" value="1" />
+                                            <label class="star star-1" for="star-1"></label>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-md-12">
+                                    <input type="submit" value="Send Message" class="btn btn-primary text-white">
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        var owl = $(".owl-carousel").owlCarousel({
+            items: 3,
+            loop: true,
+            autoplay: true,
+            autoplayHoverPause: true,
+            nav: false,
+            dots: false,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 3
+                }
+            }
+        });
+
+        // Custom navigation controls
+        $(".owl-prev").click(function () {
+            owl.trigger("prev.owl.carousel");
+        });
+
+        $(".owl-next").click(function () {
+            owl.trigger("next.owl.carousel");
+        });
+
+
+    });
+</script>

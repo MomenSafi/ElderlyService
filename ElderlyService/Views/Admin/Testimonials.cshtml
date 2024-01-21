@@ -38,13 +38,33 @@
                     <tr>
                         <th scope="row">@count</th>
                         <td>@obj.Users.FirstName @obj.Users.LastName</td>
-                        <td>@obj.Comment</td>
+                        <td>
+                            <button type="button" class="btn btn-secondary btn-sm modal-trigger-button" data-review-id="@obj.ReviewID">
+                                View Comment
+                            </button>
+
+
+                            <!-- Notes Modal -->
+                            <div class="modal fade" id="notes-@obj.ReviewID" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="notesModalLabel" style="color:black">Comment</h5>
+                                            
+                                        </div>
+                                        <div class="modal-body">
+                                            @obj.Comment
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
                         <td>@obj.status</td>
                         <td>@obj.DateTime.ToString("yyyy-MM-dd")</td>
                         @if (obj.status == ReviewsForWebsites.Status.pending)
                         {
-
-
                             <td>
                                 <a data-id="@obj.ReviewID" class="btn btn-primary mx-2 Approve">
                                     <i class="bi bi-pencil-square"></i> Approve
@@ -57,7 +77,6 @@
                         else if (obj.status == ReviewsForWebsites.Status.Approved)
                         {
                             <td>
-
                                 <a data-id="@obj.ReviewID" class="btn btn-danger mx-2 Reject">
                                     <i class="bi bi-trash-fill"></i> Reject
                                 </a>
@@ -82,41 +101,53 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    $('.Approve').on('click', function () {
-        var id = $(this).data('id');
+    $(document).ready(function () {
 
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, Accept it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // User clicked Yes, handle the deletion here
-                window.location.href = '@Url.Action("ShowOrDelTestimonials", "Admin")' + '?id=' + id + '&status=true';
-            }
+        $('.Approve').on('click', function () {
+            var id = $(this).data('id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Accept it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User clicked Yes, handle the deletion here
+                    window.location.href = '@Url.Action("ShowOrDelTestimonials", "Admin")' + '?id=' + id + '&status=true';
+                }
+            });
+        });
+
+        $('.Reject').on('click', function () {
+            var id = $(this).data('id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User clicked Yes, handle the deletion here
+                    window.location.href = '@Url.Action("ShowOrDelTestimonials", "Admin")' + '?id=' + id + '&status=false';
+                }
+            });
+        });
+
+        $('.modal-trigger-button').on('click', function () {
+            var reviewId = $(this).data('review-id');
+            console.log('Modal Trigger ID:', reviewId);
+
+            // Trigger the modal with the unique ID
+            $('#notes-' + reviewId).modal('show');
         });
     });
 
-    $('.Reject').on('click', function () {
-        var id = $(this).data('id');
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // User clicked Yes, handle the deletion here
-                window.location.href = '@Url.Action("ShowOrDelTestimonials", "Admin")' + '?id=' + id + '&status=false';
-            }
-        });
-    });
 </script>

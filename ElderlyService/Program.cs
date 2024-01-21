@@ -1,5 +1,6 @@
 using ElderlyService;
 using ElderlyService.Data;
+using ElderlyService.SendEmails;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,8 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<BackgroundTaskService>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
+
 
 var app = builder.Build();
 

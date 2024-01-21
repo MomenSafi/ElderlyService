@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Linq;
+using ElderlyService.SendEmails;
 
 namespace ElderlyService.Controllers
 {
@@ -12,12 +13,13 @@ namespace ElderlyService.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment webHostEnvironment;
-        public UserController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+        private readonly IEmailService _emailService;
+        public UserController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailService emailService)
         {
             _db = db;
             this.webHostEnvironment = webHostEnvironment;
+            _emailService = emailService;
         }
-
 
         public class ServiceAndTestimonials
         {
@@ -56,9 +58,9 @@ namespace ElderlyService.Controllers
             List<Caregiver> caregiver;
             caregiver = _db.Caregivers
                 .Include(c => c.Users)
-                .Include(c=>c.Service)
+                .Include(c => c.Service)
                 .Include(c => c.Reviews)
-                .Include(c=>c.Availabilities)
+                .Include(c => c.Availabilities)
                 .Where(c => c.Valid == true)
                 .ToList();
             if (id != null)
@@ -124,8 +126,8 @@ namespace ElderlyService.Controllers
             var caregiversWithRating = _db.Caregivers
                 .Where(c => c.Valid == true)
                 .Include(c => c.Reviews) // Include Reviews navigation property
-                .Include(c=>c.Users)
-                .Include(c=>c.Service)
+                .Include(c => c.Users)
+                .Include(c => c.Service)
                 .Where(c => c.Reviews.Any()) // Only include caregivers with at least one review
                 .Select(c => new
                 {
@@ -149,12 +151,6 @@ namespace ElderlyService.Controllers
             return View();
         }
 
-        public IActionResult NotiNotification()
-        {
-            return View();
-        }
-
-
         public IActionResult Profile(string id)
         {
             var caregiver = _db.Caregivers
@@ -164,14 +160,21 @@ namespace ElderlyService.Controllers
                     .ThenInclude(r => r.Users)
                 .Include(c => c.Service)
                 .Include(c => c.Experiences)
-                .Include(c => c.Availabilities.Where(a=>a.Status == 1))
+                .Include(c => c.Availabilities.Where(a => a.Status == 1))
                 .FirstOrDefault(c => c.CaregiverId == id);
             return View(caregiver);
         }
 
         public IActionResult MyProfile()
         {
+            TempData.Remove("ReturnUrl");
             string? userJson = HttpContext.Session.GetString("LiveUser");
+            if(userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("MyProfile", "User");
+                return RedirectToAction("LogIn", "Login");
+            }
             var user = JsonConvert.DeserializeObject<Users>(userJson);
             if (user.RoleId == "2")
             {
@@ -186,6 +189,12 @@ namespace ElderlyService.Controllers
         public IActionResult CaregiverProfile()
         {
             string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("MyProfile", "User");
+                return RedirectToAction("LogIn", "Login");
+            }
             var user = JsonConvert.DeserializeObject<Users>(userJson);
             var caregiver = _db.Caregivers
                 .Include(c => c.Users)
@@ -196,19 +205,68 @@ namespace ElderlyService.Controllers
                .Include(c => c.Experiences)
                .Include(c => c.Availabilities.Where(a => a.Status == 1))
                .Include(c => c.Appointments)
-                    .ThenInclude(a=>a.Users)
+                    .ThenInclude(a => a.Users)
                 .FirstOrDefault(c => c.Users.userId == user.userId);
             return View(caregiver);
         }
-
-        public IActionResult UserProfile()
+        [HttpPost]
+        public IActionResult CaregiverProfile(string SearchItem)
         {
             string? userJson = HttpContext.Session.GetString("LiveUser");
             var user = JsonConvert.DeserializeObject<Users>(userJson);
+
+            if (!string.IsNullOrEmpty(SearchItem))
+            {
+                var filteredCaregiver = _db.Caregivers
+                    .Include(c => c.Users)
+                        .ThenInclude(u => u.Roles)
+                    .Include(c => c.Reviews.Where(r => r.status == Reviews.Status.Approved))
+                        .ThenInclude(r => r.Users)
+                    .Include(c => c.Service)
+                    .Include(c => c.Experiences)
+                    .Include(c => c.Availabilities.Where(a => a.Status == 1))
+                    .Include(c => c.Appointments)
+                        .ThenInclude(a => a.Users)
+                    .FirstOrDefault(c => c.Users.userId == user.userId);
+
+                if (filteredCaregiver != null)
+                {
+                    filteredCaregiver.Appointments = filteredCaregiver.Appointments
+                        .Where(a => a.Users.FirstName.Contains(SearchItem) || a.Users.LastName.Contains(SearchItem))
+                        .ToList();
+
+                    return View(filteredCaregiver);
+                }
+            }
+
+            var caregiver = _db.Caregivers
+                .Include(c => c.Users)
+                    .ThenInclude(u => u.Roles)
+                .Include(c => c.Reviews.Where(r => r.status == Reviews.Status.Approved))
+                    .ThenInclude(r => r.Users)
+                .Include(c => c.Service)
+                .Include(c => c.Experiences)
+                .Include(c => c.Availabilities.Where(a => a.Status == 1))
+                .Include(c => c.Appointments)
+                    .ThenInclude(a => a.Users)
+                .FirstOrDefault(c => c.Users.userId == user.userId);
+
+            return View(caregiver);
+        }
+        public IActionResult UserProfile()
+        {
+            string? userJson = HttpContext.Session.GetString("LiveUser");
+            if (userJson == null)
+            {
+                TempData["error"] = "You must Login first";
+                TempData["ReturnUrl"] = Url.Action("MyProfile", "User");
+                return RedirectToAction("LogIn", "Login");
+            }
+            var user = JsonConvert.DeserializeObject<Users>(userJson);
             var us = _db.Users
                 .Include(u => u.Appointments)
-                    .ThenInclude(a=>a.Caregiver)
-                        .ThenInclude(c=>c.Users)
+                    .ThenInclude(a => a.Caregiver)
+                        .ThenInclude(c => c.Users)
 
                 .SingleOrDefault(u => u.userId == user.userId);
 
@@ -277,7 +335,7 @@ namespace ElderlyService.Controllers
             return View(caregiver);
         }
         [HttpPost]
-        public IActionResult Appointment(string id, DateTime StartTime, DateTime EndTime,DateTime BookingDate,string Location, string Notes)
+        public async Task<IActionResult> Appointment(string id, DateTime StartTime, DateTime EndTime, DateTime BookingDate, string Location, string Notes)
         {
             var appointment = new Appointment();
             appointment.StartTime = StartTime;
@@ -294,7 +352,16 @@ namespace ElderlyService.Controllers
             _db.Appointments.Add(appointment);
             _db.SaveChanges();
             TempData["success"] = "Appointment apply successfully, Wait to reply it";
-            return RedirectToAction("Profile", new {id = appointment.CaregiverId});
+            var caregiver = _db.Caregivers
+                .Where(c => c.CaregiverId == appointment.CaregiverId)
+                .Include(c => c.Users).FirstOrDefault();
+            string caregiverEmail = caregiver.Users.Email;
+            string subject = "Appointment Request";
+            string body = "A new appointment request has been made. Check your profile";
+
+            await _emailService.SendEmailAsync(caregiverEmail, subject, body);
+
+            return RedirectToAction("Profile", new { id = appointment.CaregiverId });
         }
     }
 }

@@ -26,6 +26,11 @@ namespace ElderlyService.Data
             return services.ToList();
         }
 
+        public Users getAdmin()
+        {
+            return Users.Where(u => u.RoleId == "1").FirstOrDefault();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Users>().HasIndex(x => x.Email).IsUnique();
